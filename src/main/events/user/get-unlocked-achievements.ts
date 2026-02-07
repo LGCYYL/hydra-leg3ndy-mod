@@ -1,7 +1,7 @@
-import type { GameShop, UserAchievement, UserPreferences } from "@types";
+import type { GameShop, UserAchievement } from "@types";
 import { registerEvent } from "../register-event";
 import { getGameAchievementData } from "@main/services/achievements/get-game-achievement-data";
-import { db, gameAchievementsSublevel, levelKeys } from "@main/level";
+import { gameAchievementsSublevel, levelKeys } from "@main/level";
 import { AchievementWatcherManager } from "@main/services/achievements/achievement-watcher-manager";
 
 export const getUnlockedAchievements = async (
@@ -12,16 +12,6 @@ export const getUnlockedAchievements = async (
   const cachedAchievements = await gameAchievementsSublevel.get(
     levelKeys.game(shop, objectId)
   );
-
-  const userPreferences = await db.get<string, UserPreferences | null>(
-    levelKeys.userPreferences,
-    {
-      valueEncoding: "json",
-    }
-  );
-
-  const showHiddenAchievementsDescription =
-    userPreferences?.showHiddenAchievementsDescription || false;
 
   const achievementsData = await getGameAchievementData(
     objectId,
