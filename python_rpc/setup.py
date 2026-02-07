@@ -1,4 +1,10 @@
+import os
+import sys
 from cx_Freeze import setup, Executable
+
+# Patch: Filter out WindowsApps from PATH to prevent Access Denied errors in cx_Freeze
+os.environ['PATH'] = ';'.join([p for p in os.environ.get('PATH', '').split(';') if 'WindowsApps' not in p])
+
 
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {

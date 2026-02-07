@@ -34,6 +34,10 @@ Certifique-se de usar "Leg3ndy Hydra" ao invés de "Hydra" nas strings visíveis
 Para criar o instalador `.exe` (Windows):
 
 ```bash
+# 1. Compilar Backend Python (Apenas se houver alterações ou na primeira vez)
+python python_rpc/setup.py build
+
+# 2. Compilar Aplicativo (Electron)
 npm run build:win
 ```
 
