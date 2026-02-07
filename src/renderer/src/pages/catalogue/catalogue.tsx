@@ -29,7 +29,17 @@ const filterCategoryColors = {
 
 const PAGE_SIZE = 20;
 
-export default function Catalogue() {
+import { ErrorBoundary } from "@renderer/components/error-boundary/error-boundary";
+
+export default function CatalogueWrapper() {
+  return (
+    <ErrorBoundary>
+      <Catalogue />
+    </ErrorBoundary>
+  );
+}
+
+function Catalogue() {
   const abortControllerRef = useRef<AbortController | null>(null);
   const cataloguePageRef = useRef<HTMLDivElement>(null);
 
@@ -315,11 +325,11 @@ export default function Catalogue() {
                       setFilters({
                         [section.key]: filters[
                           section.key as
-                            | "genres"
-                            | "tags"
-                            | "downloadSourceFingerprints"
-                            | "developers"
-                            | "publishers"
+                          | "genres"
+                          | "tags"
+                          | "downloadSourceFingerprints"
+                          | "developers"
+                          | "publishers"
                         ].filter((item) => item !== value),
                       })
                     );

@@ -1,3 +1,11 @@
+import sys
+
+if sys.platform == 'win32':
+    try:
+        import libtorrent_windows_dll
+    except ImportError:
+        pass
+
 import libtorrent as lt
 
 class TorrentDownloader:

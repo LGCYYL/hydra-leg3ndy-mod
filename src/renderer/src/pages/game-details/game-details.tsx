@@ -27,7 +27,17 @@ import { CloudSyncFilesModal } from "./cloud-sync-files-modal/cloud-sync-files-m
 import "./game-details.scss";
 import "./hero.scss";
 
-export default function GameDetails() {
+import { ErrorBoundary } from "@renderer/components/error-boundary/error-boundary";
+
+export default function GameDetailsWrapper() {
+  return (
+    <ErrorBoundary>
+      <GameDetails />
+    </ErrorBoundary>
+  );
+}
+
+function GameDetails() {
   const [randomGame, setRandomGame] = useState<Steam250Game | null>(null);
   const [randomizerLocked, setRandomizerLocked] = useState(false);
 
@@ -105,25 +115,25 @@ export default function GameDetails() {
           ) => {
             const response = addToQueueOnly
               ? await addGameToQueue({
-                  objectId: objectId!,
-                  title: gameTitle,
-                  downloader,
-                  shop,
-                  downloadPath,
-                  uri: selectRepackUri(repack, downloader),
-                  automaticallyExtract: automaticallyExtract,
-                  fileSize: repack.fileSize,
-                })
+                objectId: objectId!,
+                title: gameTitle,
+                downloader,
+                shop,
+                downloadPath,
+                uri: selectRepackUri(repack, downloader),
+                automaticallyExtract: automaticallyExtract,
+                fileSize: repack.fileSize,
+              })
               : await startDownload({
-                  objectId: objectId!,
-                  title: gameTitle,
-                  downloader,
-                  shop,
-                  downloadPath,
-                  uri: selectRepackUri(repack, downloader),
-                  automaticallyExtract: automaticallyExtract,
-                  fileSize: repack.fileSize,
-                });
+                objectId: objectId!,
+                title: gameTitle,
+                downloader,
+                shop,
+                downloadPath,
+                uri: selectRepackUri(repack, downloader),
+                automaticallyExtract: automaticallyExtract,
+                fileSize: repack.fileSize,
+              });
 
             if (response.ok) {
               await updateGame();

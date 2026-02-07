@@ -21,50 +21,18 @@ const ludusaviBinaryName = {
 };
 
 const downloadLudusavi = async () => {
-  if (
-    fs.existsSync(
-      path.join(process.cwd(), "ludusavi", ludusaviBinaryName[process.platform])
-    )
-  ) {
-    console.log("Ludusavi already exists, skipping download...");
+  const binaryPath = path.join(process.cwd(), "ludusavi", ludusaviBinaryName[process.platform]);
+
+  if (fs.existsSync(binaryPath)) {
+    console.log("Ludusavi binary found.");
     return;
   }
 
-  const file = fileName[process.platform];
-  const downloadUrl = `https://github.com/mtkennerly/ludusavi/releases/download/v${ludusaviVersion}/${file}`;
-
-  console.log(`Downloading ${file}...`);
-
-  const response = await axios.get(downloadUrl, { responseType: "stream" });
-
-  const stream = response.data.pipe(fs.createWriteStream(file));
-
-  stream.on("finish", async () => {
-    console.log(`Downloaded ${file}, extracting...`);
-
-    const pwd = process.cwd();
-    const targetPath = path.join(pwd, "ludusavi");
-
-    await fs.promises.mkdir(targetPath, { recursive: true });
-
-    if (process.platform === "win32") {
-      await exec(`npx extract-zip ${file} ${targetPath}`);
-    } else {
-      await tar.x({
-        file: file,
-        cwd: targetPath,
-      });
-    }
-
-    if (process.platform !== "win32") {
-      fs.chmodSync(path.join(targetPath, "ludusavi"), 0o755);
-    }
-
-    console.log("Extracted. Renaming folder...");
-
-    console.log(`Extracted ${file}, removing compressed downloaded file...`);
-    fs.rmSync(file);
-  });
+  console.error("SECURITY ALERT: Ludusavi binary not found!");
+  console.error("Please manually download the correct version (v" + ludusaviVersion + ") and place it at:");
+  console.error(binaryPath);
+  console.error("Automatic download disabled for security.");
+  // process.exit(1); // Optional: fail build if missing
 };
 
 downloadLudusavi();

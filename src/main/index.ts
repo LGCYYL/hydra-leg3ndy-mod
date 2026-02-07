@@ -1,5 +1,4 @@
 import { app, BrowserWindow, net, protocol } from "electron";
-import updater from "electron-updater";
 import i18n from "i18next";
 import path from "node:path";
 import url from "node:url";
@@ -18,15 +17,15 @@ import { GameShop, UserPreferences } from "@types";
 import { launchGame } from "./helpers";
 import { loadState } from "./main";
 
-const { autoUpdater } = updater;
+// const { autoUpdater } = updater;
 
-autoUpdater.setFeedURL({
-  provider: "github",
-  owner: "hydralauncher",
-  repo: "hydra",
-});
+// autoUpdater.setFeedURL({
+//   provider: "github",
+//   owner: "hydralauncher",
+//   repo: "hydra",
+// });
 
-autoUpdater.logger = logger;
+// autoUpdater.logger = logger;
 
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) app.quit();
@@ -60,7 +59,7 @@ if (process.defaultApp) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
-  electronApp.setAppUserModelId("gg.hydralauncher.hydra");
+  electronApp.setAppUserModelId("com.leg3ndy.hydra");
 
   protocol.handle("local", (request) => {
     const filePath = request.url.slice("local:".length);

@@ -1,5 +1,5 @@
-appId: gg.hydralauncher.hydra
-productName: Hydra
+appId: com.leg3ndy.hydra
+productName: Leg3ndy Hydra
 directories:
   buildResources: build
 extraResources:
@@ -67,8 +67,9 @@ appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
-  provider: github
-  owner: hydralauncher
-  repo: hydra
+  provider: generic
+  url: "http://localhost:9999/releases"
+  # owner: hydralauncher
+  # repo: hydra
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/
