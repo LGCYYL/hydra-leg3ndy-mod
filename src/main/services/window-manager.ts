@@ -232,12 +232,12 @@ export class WindowManager {
         const isMaximized = mainWindow.isMaximized() ?? false;
         const screenConfig = isMaximized
           ? {
-              x: undefined,
-              y: undefined,
-              height: this.initialConfigInitializationMainWindow.height ?? 860,
-              width: this.initialConfigInitializationMainWindow.width ?? 1200,
-              isMaximized: true,
-            }
+            x: undefined,
+            y: undefined,
+            height: this.initialConfigInitializationMainWindow.height ?? 860,
+            width: this.initialConfigInitializationMainWindow.width ?? 1200,
+            isMaximized: true,
+          }
           : { ...lastBounds, isMaximized };
 
         await this.saveScreenConfig(screenConfig);
@@ -685,7 +685,7 @@ export class WindowManager {
       tray.popUpContextMenu(contextMenu);
     };
 
-    tray.setToolTip("Hydra Launcher");
+    tray.setToolTip("Hydra Leg3ndy Edition");
 
     if (process.platform === "win32") {
       await updateSystemTray();

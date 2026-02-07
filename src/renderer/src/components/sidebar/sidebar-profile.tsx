@@ -1,11 +1,12 @@
+// @ts-ignore
+import leg3ndyLogo from "@renderer/assets/leg3ndy.png";
 import { useNavigate } from "react-router-dom";
 import { BellIcon } from "@primer/octicons-react";
-import { useAppSelector, useUserDetails } from "@renderer/hooks";
+import { useUserDetails } from "@renderer/hooks";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import SteamLogo from "@renderer/assets/steam-logo.svg?react";
-import { Avatar } from "../avatar/avatar";
-import { AuthPage } from "@shared";
+// import SteamLogo from "@renderer/assets/steam-logo.svg?react";
+// import { Avatar } from "../avatar/avatar";
 import { logger } from "@renderer/logger";
 import type { NotificationCountResponse } from "@types";
 import "./sidebar-profile.scss";
@@ -17,7 +18,7 @@ export function SidebarProfile() {
 
   const { userDetails } = useUserDetails();
 
-  const { gameRunning } = useAppSelector((state) => state.gameRunning);
+  // const { gameRunning } = useAppSelector((state) => state.gameRunning);
 
   const [notificationCount, setNotificationCount] = useState(0);
   const apiNotificationCountRef = useRef(0);
@@ -96,15 +97,6 @@ export function SidebarProfile() {
     return () => unsubscribe();
   }, [fetchLocalNotificationCount]);
 
-  const handleProfileClick = () => {
-    if (userDetails === null) {
-      window.electron.openAuthWindow(AuthPage.SignIn);
-      return;
-    }
-
-    navigate(`/profile/${userDetails.id}`);
-  };
-
   const notificationsButton = useMemo(() => {
     return (
       <button
@@ -112,6 +104,7 @@ export function SidebarProfile() {
         className="sidebar-profile__notification-button"
         onClick={() => navigate("/notifications")}
         title={t("notifications")}
+        style={{ marginLeft: "auto" }}
       >
         {notificationCount > 0 && (
           <small className="sidebar-profile__notification-button-badge">
@@ -124,7 +117,7 @@ export function SidebarProfile() {
     );
   }, [t, notificationCount, navigate]);
 
-  const gameRunningDetails = () => {
+  /* const gameRunningDetails = () => {
     if (!userDetails || !gameRunning) return null;
 
     if (gameRunning.iconUrl) {
@@ -139,11 +132,18 @@ export function SidebarProfile() {
     }
 
     return <SteamLogo />;
-  };
+  }; */
 
   return (
     <div className="sidebar-profile">
-      <button
+      <img
+        src={leg3ndyLogo}
+        alt="LEG3NDY Hydra"
+        className="sidebar-profile__logo"
+        style={{ width: '120px', marginTop: '1px', marginLeft: '12px' }}
+      />
+
+      {/* <button
         type="button"
         className="sidebar-profile__button"
         onClick={handleProfileClick}
@@ -169,7 +169,7 @@ export function SidebarProfile() {
 
           {gameRunningDetails()}
         </div>
-      </button>
+      </button> */}
 
       {notificationsButton}
     </div>

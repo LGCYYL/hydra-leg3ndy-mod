@@ -59,10 +59,7 @@ export const getUnlockedAchievements = async (
         unlocked: false,
         unlockTime: null,
         icongray: icongray,
-        description:
-          !achievementData.hidden || showHiddenAchievementsDescription
-            ? achievementData.description
-            : undefined,
+        description: achievementData.description,
       };
     })
     .sort((a, b) => {

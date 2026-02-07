@@ -52,6 +52,7 @@ export const getGameAchievementData = async (
     },
     {
       ifModifiedSince: getModifiedSinceHeader(cachedAchievements, language),
+      needsAuth: false,
     }
   )
     .then(async (achievements) => {

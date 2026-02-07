@@ -30,7 +30,12 @@ export const LibraryGameCard = memo(function LibraryGameCard({
   const { formatPlayTime, handleCardClick, handleContextMenuClick } =
     useGameCard(game, onContextMenu);
 
-  const coverImage = game.coverImageUrl?.replaceAll("\\", "/") ?? "";
+  const coverImage = (
+    game.coverImageUrl ||
+    game.libraryImageUrl ||
+    game.iconUrl ||
+    ""
+  ).replaceAll("\\", "/");
 
   const [imageError, setImageError] = useState(false);
 
@@ -81,7 +86,7 @@ export const LibraryGameCard = memo(function LibraryGameCard({
                 {Math.round(
                   ((game.unlockedAchievementCount ?? 0) /
                     (game.achievementCount ?? 1)) *
-                    100
+                  100
                 )}
                 %
               </span>

@@ -158,7 +158,7 @@ export function AchievementsContent({
     );
   };
 
-  if (!objectId || !shop || !gameTitle || !userDetails) return null;
+  if (!objectId || !shop || !gameTitle) return null;
 
   return (
     <div className="achievements-content__achievements-list">
@@ -192,19 +192,22 @@ export function AchievementsContent({
           </div>
 
           <div className="achievements-content__achievements-list__section__container__achievements-summary-wrapper">
-            <AchievementSummary
-              user={{
-                ...userDetails,
-                totalAchievementCount: comparedAchievements
-                  ? comparedAchievements.owner.totalAchievementCount
-                  : achievements!.length,
-                unlockedAchievementCount: comparedAchievements
-                  ? comparedAchievements.owner.unlockedAchievementCount
-                  : achievements!.filter((achievement) => achievement.unlocked)
-                      .length,
-              }}
-              isComparison={otherUser !== null}
-            />
+            {userDetails && (
+              <AchievementSummary
+                user={{
+                  ...userDetails,
+                  totalAchievementCount: comparedAchievements
+                    ? comparedAchievements.owner.totalAchievementCount
+                    : achievements!.length,
+                  unlockedAchievementCount: comparedAchievements
+                    ? comparedAchievements.owner.unlockedAchievementCount
+                    : achievements!.filter(
+                      (achievement) => achievement.unlocked
+                    ).length,
+                }}
+                isComparison={otherUser !== null}
+              />
+            )}
 
             {otherUser && <AchievementSummary user={otherUser} />}
           </div>
@@ -218,9 +221,13 @@ export function AchievementsContent({
               className={`achievements-content__achievements-list__section__table-header__container ${hasActiveSubscription ? "achievements-content__achievements-list__section__table-header__container--has-active-subscription" : "achievements-content__achievements-list__section__table-header__container--has-no-active-subscription"}`}
             >
               <div></div>
-              {hasActiveSubscription && (
+              {hasActiveSubscription && userDetails && (
                 <div className="achievements-content__achievements-list__section__table-header__container__user-avatar">
-                  {getProfileImage({ ...userDetails })}
+                  {getProfileImage({
+                    ...userDetails,
+                    displayName: userDetails.displayName ?? "",
+                    profileImageUrl: userDetails.profileImageUrl ?? null,
+                  })}
                 </div>
               )}
               <div className="achievements-content__achievements-list__section__table-header__container__other-user-avatar">
@@ -237,7 +244,7 @@ export function AchievementsContent({
           </>
         ) : (
           <>
-            <AchievementPanel achievements={achievements!} />
+            <AchievementPanel />
             <AchievementList achievements={achievements!} />
           </>
         )}

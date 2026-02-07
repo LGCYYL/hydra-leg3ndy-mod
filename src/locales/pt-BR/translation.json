@@ -229,6 +229,7 @@
     "hydra_needs_to_remain_open": "para este download, o Leg3ndy Hydra precisa ficar aberto até a conclusão. Caso o Leg3ndy Hydra encerre antes da conclusão, perderá seu progresso.",
     "achievements": "Conquistas",
     "achievements_count": "Conquistas ({{unlockedCount}}/{{achievementsCount}})",
+    "achievements_total": "Conquistas ({{achievementsCount}})",
     "cloud_save": "Salvamento em nuvem",
     "cloud_save_description": "Mantenha seu progresso na nuvem e continue de onde parou em qualquer dispositivo",
     "backups": "Backups",

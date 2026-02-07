@@ -2,28 +2,28 @@ import { useContext, useEffect, useState } from "react";
 import type {
   HowLongToBeatCategory,
   SteamAppDetails,
-  UserAchievement,
+  // UserAchievement,
 } from "@types";
 import { useTranslation } from "react-i18next";
 import { Button, Link, StarRating } from "@renderer/components";
 
 import { gameDetailsContext } from "@renderer/context";
-import { useDate, useFormat, useUserDetails } from "@renderer/hooks";
+import { useDate, useFormat, /* useUserDetails */ } from "@renderer/hooks";
 import {
-  CloudOfflineIcon,
+  // CloudOfflineIcon,
   DownloadIcon,
-  LockIcon,
+  // LockIcon,
   PeopleIcon,
   StarIcon,
 } from "@primer/octicons-react";
 import { HowLongToBeatSection } from "./how-long-to-beat-section";
 import { SidebarSection } from "../sidebar-section/sidebar-section";
 import { buildGameAchievementPath } from "@renderer/helpers";
-import { useSubscription } from "@renderer/hooks/use-subscription";
+// import { useSubscription } from "@renderer/hooks/use-subscription";
 import "./sidebar.scss";
 import { GameLanguageSection } from "./game-language-section";
 
-const achievementsPlaceholder: UserAchievement[] = [
+/* const achievementsPlaceholder: UserAchievement[] = [
   {
     displayName: "Timber!!",
     name: "1",
@@ -55,7 +55,7 @@ const achievementsPlaceholder: UserAchievement[] = [
     unlocked: false,
     unlockTime: null,
   },
-];
+]; */
 
 export function Sidebar() {
   const [howLongToBeat, setHowLongToBeat] = useState<{
@@ -63,14 +63,14 @@ export function Sidebar() {
     data: HowLongToBeatCategory[] | null;
   }>({ isLoading: true, data: null });
 
-  const { userDetails, hasActiveSubscription } = useUserDetails();
+  // const { userDetails, hasActiveSubscription } = useUserDetails();
   const [activeRequirement, setActiveRequirement] =
     useState<keyof SteamAppDetails["pc_requirements"]>("minimum");
 
   const { gameTitle, shopDetails, objectId, shop, stats, achievements } =
     useContext(gameDetailsContext);
 
-  const { showHydraCloudModal } = useSubscription();
+  // const { showHydraCloudModal } = useSubscription();
   const { t } = useTranslation("game_details");
   const { formatDateTime } = useDate();
   const { numberFormatter } = useFormat();
@@ -98,7 +98,7 @@ export function Sidebar() {
 
   return (
     <aside className="content-sidebar">
-      {userDetails === null && (
+      {/* {userDetails === null && (
         <SidebarSection title={t("achievements")}>
           <div className="achievements-placeholder">
             <LockIcon size={36} />
@@ -127,17 +127,16 @@ export function Sidebar() {
             ))}
           </ul>
         </SidebarSection>
-      )}
+      )} */}
 
-      {userDetails && achievements && achievements.length > 0 && (
+      {achievements && achievements.length > 0 && (
         <SidebarSection
-          title={t("achievements_count", {
-            unlockedCount: achievements.filter((a) => a.unlocked).length,
+          title={t("achievements_total", {
             achievementsCount: achievements.length,
           })}
         >
           <ul className="list">
-            {!hasActiveSubscription && (
+            {/* {!hasActiveSubscription && (
               <button
                 className="subscription-required-button"
                 onClick={() => showHydraCloudModal("achievements")}
@@ -145,7 +144,7 @@ export function Sidebar() {
                 <CloudOfflineIcon size={16} />
                 <span>{t("achievements_not_sync")}</span>
               </button>
-            )}
+            )} */}
 
             {achievements.slice(0, 4).map((achievement) => (
               <li key={achievement.displayName}>
@@ -159,9 +158,8 @@ export function Sidebar() {
                   title={achievement.description}
                 >
                   <img
-                    className={`list__item-image ${
-                      achievement.unlocked ? "" : "list__item-image--locked"
-                    }`}
+                    className={`list__item-image ${achievement.unlocked ? "" : "list__item-image--locked"
+                      }`}
                     src={achievement.icon}
                     alt={achievement.displayName}
                   />

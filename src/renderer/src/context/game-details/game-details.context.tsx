@@ -42,10 +42,10 @@ export const gameDetailsContext = createContext<GameDetailsContext>({
   hasNSFWContentBlocked: false,
   lastDownloadedOption: null,
   selectGameExecutable: async () => null,
-  updateGame: async () => {},
-  setShowGameOptionsModal: () => {},
-  setShowRepacksModal: () => {},
-  setHasNSFWContentBlocked: () => {},
+  updateGame: async () => { },
+  setShowGameOptionsModal: () => { },
+  setShowRepacksModal: () => { },
+  setHasNSFWContentBlocked: () => { },
 });
 
 const { Provider } = gameDetailsContext;
@@ -160,7 +160,7 @@ export function GameDetailsContextProvider({
         setIsLoading(false);
       });
 
-    if (userDetails && shop !== "custom") {
+    if (shop !== "custom") {
       window.electron
         .getUnlockedAchievements(objectId, shop)
         .then((achievements) => {

@@ -9,8 +9,7 @@ import { TextField, ConfirmationModal } from "@renderer/components";
 import {
   useDownload,
   useLibrary,
-  useToast,
-  useUserDetails,
+  useToast, // Removed useUserDetails
 } from "@renderer/hooks";
 
 import { routes } from "./routes";
@@ -23,7 +22,7 @@ import { SidebarProfile } from "./sidebar-profile";
 import { sortBy } from "lodash-es";
 import cn from "classnames";
 import {
-  CommentDiscussionIcon,
+  // CommentDiscussionIcon,
   PlayIcon,
   PlusIcon,
 } from "@primer/octicons-react";
@@ -70,7 +69,7 @@ export function Sidebar() {
     return sortBy(library, (game) => game.title);
   }, [library]);
 
-  const { hasActiveSubscription } = useUserDetails();
+  // const { hasActiveSubscription } = useUserDetails();
 
   const { lastPacket, progress } = useDownload();
 
@@ -325,8 +324,8 @@ export function Sidebar() {
                     <span>
                       {deckyPluginInfo.installed && !deckyPluginInfo.outdated
                         ? t("decky_plugin_installed_version", {
-                            version: deckyPluginInfo.version,
-                          })
+                          version: deckyPluginInfo.version,
+                        })
                         : deckyPluginInfo.installed && deckyPluginInfo.outdated
                           ? t("update_decky_plugin")
                           : t("install_decky_plugin")}
@@ -412,7 +411,7 @@ export function Sidebar() {
       </div>
 
       <div className="sidebar__bottom-buttons">
-        {hasActiveSubscription && (
+        {/* {hasActiveSubscription && (
           <button
             type="button"
             className="sidebar__help-button"
@@ -423,7 +422,7 @@ export function Sidebar() {
             </div>
             <span>{t("need_help")}</span>
           </button>
-        )}
+        )} */}
       </div>
 
       <button

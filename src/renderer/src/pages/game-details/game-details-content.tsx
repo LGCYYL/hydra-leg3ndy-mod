@@ -11,12 +11,12 @@ import { EditGameModal } from "./modals";
 import { GameReviews } from "./game-reviews";
 import { GameLogo } from "./game-logo";
 
-import { AuthPage } from "@shared";
+import { /* AuthPage */ } from "@shared";
 import { cloudSyncContext, gameDetailsContext } from "@renderer/context";
 
-import cloudIconAnimated from "@renderer/assets/icons/cloud-animated.gif";
-import { useUserDetails, useLibrary } from "@renderer/hooks";
-import { useSubscription } from "@renderer/hooks/use-subscription";
+// import cloudIconAnimated from "@renderer/assets/icons/cloud-animated.gif";
+import { /* useUserDetails, */ useLibrary } from "@renderer/hooks";
+// import { useSubscription } from "@renderer/hooks/use-subscription";
 import "./game-details.scss";
 import "./hero.scss";
 
@@ -68,12 +68,12 @@ export function GameDetailsContent() {
     shop,
   } = useContext(gameDetailsContext);
 
-  const { showHydraCloudModal } = useSubscription();
+  // const { showHydraCloudModal } = useSubscription();
 
-  const { userDetails, hasActiveSubscription } = useUserDetails();
+  // const { userDetails, hasActiveSubscription } = useUserDetails();
   const { updateLibrary, library } = useLibrary();
 
-  const { setShowCloudSyncModal, getGameArtifacts } =
+  const { /* setShowCloudSyncModal, */ getGameArtifacts } =
     useContext(cloudSyncContext);
 
   const aboutTheGame = useMemo(() => {
@@ -113,7 +113,7 @@ export function GameDetailsContent() {
     setBackdropOpacity(1);
   }, [objectId]);
 
-  const handleCloudSaveButtonClick = () => {
+  /* const handleCloudSaveButtonClick = () => {
     if (!userDetails) {
       window.electron.openAuthWindow(AuthPage.SignIn);
       return;
@@ -125,7 +125,7 @@ export function GameDetailsContent() {
     }
 
     setShowCloudSyncModal(true);
-  };
+  }; */
 
   const handleEditGameClick = () => {
     setShowEditGameModal(true);
@@ -155,9 +155,9 @@ export function GameDetailsContent() {
   const heroImage = isCustomGame
     ? game?.libraryHeroImageUrl || game?.iconUrl || ""
     : getImageWithCustomPriority(
-        game?.customHeroImageUrl,
-        shopDetails?.assets?.libraryHeroImageUrl
-      );
+      game?.customHeroImageUrl,
+      shopDetails?.assets?.libraryHeroImageUrl
+    );
 
   return (
     <div
@@ -190,7 +190,7 @@ export function GameDetailsContent() {
                   </button>
                 )}
 
-                {game?.shop !== "custom" && (
+                {/* {game?.shop !== "custom" && (
                   <button
                     type="button"
                     className="game-details__cloud-sync-button"
@@ -205,7 +205,7 @@ export function GameDetailsContent() {
                     </div>
                     {t("cloud_save")}
                   </button>
-                )}
+                )} */}
               </div>
             </div>
 
@@ -224,11 +224,10 @@ export function GameDetailsContent() {
               dangerouslySetInnerHTML={{
                 __html: aboutTheGame,
               }}
-              className={`game-details__description ${
-                isDescriptionExpanded
-                  ? "game-details__description--expanded"
-                  : "game-details__description--collapsed"
-              }`}
+              className={`game-details__description ${isDescriptionExpanded
+                ? "game-details__description--expanded"
+                : "game-details__description--collapsed"
+                }`}
             />
 
             {aboutTheGame && aboutTheGame.length > 500 && (
@@ -247,7 +246,7 @@ export function GameDetailsContent() {
                   shop={shop}
                   objectId={objectId}
                   game={game}
-                  userDetailsId={userDetails?.id}
+                  userDetailsId={/* userDetails?.id */ undefined}
                   isGameInLibrary={isGameInLibrary}
                   hasUserReviewed={hasUserReviewed}
                   onUserReviewedChange={setHasUserReviewed}

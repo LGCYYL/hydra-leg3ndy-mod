@@ -31,11 +31,11 @@ export default function Settings() {
       { tabLabel: t("debrid"), contentTitle: t("debrid") },
     ];
 
-    if (userDetails)
+    /* if (userDetails)
       return [
         ...categories,
         { tabLabel: t("account"), contentTitle: t("account") },
-      ];
+      ]; */
     return categories;
   }, [userDetails, t]);
 

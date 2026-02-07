@@ -13,6 +13,7 @@ import {
 import resources from "@locales";
 import { PythonRPC } from "./services/python-rpc";
 import { db, gamesSublevel, levelKeys } from "./level";
+import { ensureDefaultSources } from "./services/default-sources";
 import { GameShop, UserPreferences } from "@types";
 import { launchGame } from "./helpers";
 import { loadState } from "./main";
@@ -132,6 +133,7 @@ app.whenReady().then(async () => {
   });
 
   await loadState();
+  await ensureDefaultSources();
 
   const language = await db
     .get<string, string>(levelKeys.language, {

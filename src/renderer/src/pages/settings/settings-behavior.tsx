@@ -5,7 +5,7 @@ import { CheckboxField } from "@renderer/components";
 import { useAppSelector } from "@renderer/hooks";
 import { settingsContext } from "@renderer/context";
 import "./settings-behavior.scss";
-import { QuestionIcon } from "@primer/octicons-react";
+// import { QuestionIcon } from "@primer/octicons-react";
 
 export function SettingsBehavior() {
   const userPreferences = useAppSelector(
@@ -166,7 +166,7 @@ export function SettingsBehavior() {
         }
       />
 
-      <CheckboxField
+      {/* <CheckboxField
         label={t("show_hidden_achievement_description")}
         checked={form.showHiddenAchievementsDescription}
         onChange={() =>
@@ -175,7 +175,7 @@ export function SettingsBehavior() {
               !form.showHiddenAchievementsDescription,
           })
         }
-      />
+      /> */}
 
       <CheckboxField
         label={t("show_download_speed_in_megabytes")}
@@ -197,7 +197,7 @@ export function SettingsBehavior() {
         }
       />
 
-      <div className={`settings-behavior__checkbox-container--with-tooltip`}>
+      {/* <div className={`settings-behavior__checkbox-container--with-tooltip`}>
         <CheckboxField
           label={t("enable_steam_achievements")}
           checked={form.enableSteamAchievements}
@@ -214,7 +214,7 @@ export function SettingsBehavior() {
         >
           <QuestionIcon size={12} />
         </small>
-      </div>
+      </div> */}
 
       <CheckboxField
         label={t("enable_new_download_options_badges")}
