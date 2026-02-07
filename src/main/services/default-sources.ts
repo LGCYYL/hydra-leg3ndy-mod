@@ -11,6 +11,34 @@ interface DefaultSource {
 
 const DEFAULT_SOURCES: DefaultSource[] = [
     {
+        name: "RexaGames",
+        url: "https://hydralinks.pages.dev/sources/rexagames.json",
+    },
+    {
+        name: "FonteKazumi",
+        url: "https://davidkazumi-github-io.pages.dev/fontekazumi.json",
+    },
+    {
+        name: "GOG",
+        url: "https://hydralinks.pages.dev/sources/gog.json",
+    },
+    {
+        name: "DODI",
+        url: "https://hydralinks.pages.dev/sources/dodi.json",
+    },
+    {
+        name: "SteamRip",
+        url: "https://hydralinks.pages.dev/sources/steamrip.json",
+    },
+    {
+        name: "OnlineFix",
+        url: "https://hydralinks.pages.dev/sources/onlinefix.json",
+    },
+    {
+        name: "Xatab",
+        url: "https://hydralinks.pages.dev/sources/xatab.json",
+    },
+    {
         name: "Rutracker (Leg3ndy)",
         url: "https://raw.githubusercontent.com/KekitU/rutracker-hydra-links/main/all_categories.json",
     },
@@ -23,13 +51,13 @@ const DEFAULT_SOURCES: DefaultSource[] = [
 export const ensureDefaultSources = async () => {
     try {
         const existingSources = await downloadSourcesSublevel.values().all();
+        const existingUrls = new Set(existingSources.map((s) => s.url));
 
-        // Check if we already have sources to avoid re-adding or duplicating if the user deleted them on purpose?
-        // User asked for "Plug & Play", so if it's empty, we inject.
-        if (existingSources.length === 0) {
-            logger.info("[Leg3ndy] No download sources found. Injecting defaults...");
+        for (const source of DEFAULT_SOURCES) {
+            if (!existingUrls.has(source.url)) {
+                // Check if user already has a source with the same name, maybe update URL?
+                // For now, let's just add if URL is missing to avoid duplicates.
 
-            for (const source of DEFAULT_SOURCES) {
                 const id = uuidv4();
                 const newSource: DownloadSource = {
                     id,
@@ -41,13 +69,8 @@ export const ensureDefaultSources = async () => {
                 };
 
                 await downloadSourcesSublevel.put(id, newSource);
-                logger.info(`[Leg3ndy] Injected source: ${source.name}`);
+                logger.info(`[Leg3ndy] Injected missing source: ${source.name}`);
             }
-        } else {
-            // Optional: Check if specific leg3ndy sources exist and add them if missing? 
-            // For now, let's just do it if the list is empty to be safe and simple.
-            // Actually, the user might have deleted them. Let's stick to "if empty".
-            logger.info(`[Leg3ndy] Download sources already exist. Skipping injection.`);
         }
     } catch (error) {
         logger.error("[Leg3ndy] Failed to ensure default sources", error);
