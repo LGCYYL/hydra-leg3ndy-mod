@@ -50,14 +50,19 @@ const DEFAULT_SOURCES: DefaultSource[] = [
 
 export const ensureDefaultSources = async () => {
     try {
-        const existingSources = await downloadSourcesSublevel.values().all();
-        const existingUrls = new Set(existingSources.map((s) => s.url));
+        const existingUrls = new Set<string>();
+
+        // Use for-await iterator which is safer across different level versions
+        for await (const source of downloadSourcesSublevel.values()) {
+            if (source.url) {
+                existingUrls.add(source.url);
+            }
+        }
+
+        logger.info(`[Leg3ndy] Found ${existingUrls.size} existing sources`);
 
         for (const source of DEFAULT_SOURCES) {
             if (!existingUrls.has(source.url)) {
-                // Check if user already has a source with the same name, maybe update URL?
-                // For now, let's just add if URL is missing to avoid duplicates.
-
                 const id = uuidv4();
                 const newSource: DownloadSource = {
                     id,
@@ -70,6 +75,8 @@ export const ensureDefaultSources = async () => {
 
                 await downloadSourcesSublevel.put(id, newSource);
                 logger.info(`[Leg3ndy] Injected missing source: ${source.name}`);
+            } else {
+                logger.info(`[Leg3ndy] Source already exists: ${source.name}`);
             }
         }
     } catch (error) {
