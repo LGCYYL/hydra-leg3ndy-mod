@@ -536,7 +536,8 @@ export class GameFilesManager {
         }
 
         // Penalty for being deep in subdirectories
-        const depth = fullPath.split(path.sep).length;
+        const relativePath = path.relative(folderPath, fullPath);
+        const depth = relativePath.split(path.sep).length;
         score -= depth;
 
         if (!bestCandidate || score > bestCandidate.score) {

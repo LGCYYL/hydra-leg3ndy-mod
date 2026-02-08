@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, CheckboxField, Modal, TextField } from "@renderer/components";
+import { Button, Modal, TextField } from "@renderer/components";
 import type { Game, LibraryGame, ShortcutLocation } from "@types";
 import { gameDetailsContext } from "@renderer/context";
 import { DeleteGameModal } from "@renderer/pages/downloads/delete-game-modal";
@@ -41,7 +41,7 @@ export function GameOptionsModal({
     achievements,
   } = useContext(gameDetailsContext);
 
-  const { hasActiveSubscription } = useUserDetails();
+
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRemoveGameModal, setShowRemoveGameModal] = useState(false);
@@ -50,9 +50,7 @@ export function GameOptionsModal({
     useState(false);
   const [showChangePlaytimeModal, setShowChangePlaytimeModal] = useState(false);
   const [isDeletingAchievements, setIsDeletingAchievements] = useState(false);
-  const [automaticCloudSync, setAutomaticCloudSync] = useState(
-    game.automaticCloudSync ?? false
-  );
+
   const [creatingSteamShortcut, setCreatingSteamShortcut] = useState(false);
   const [saveFolderPath, setSaveFolderPath] = useState<string | null>(null);
   const [loadingSaveFolder, setLoadingSaveFolder] = useState(false);
@@ -296,23 +294,7 @@ export function GameOptionsModal({
     }
   };
 
-  const handleToggleAutomaticCloudSync = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setAutomaticCloudSync(event.target.checked);
 
-    const gameKey = getGameKey(game.shop, game.objectId);
-    const gameData = (await levelDBService.get(
-      gameKey,
-      "games"
-    )) as Game | null;
-    if (gameData) {
-      const updated = { ...gameData, automaticCloudSync: event.target.checked };
-      await levelDBService.put(gameKey, updated, "games");
-    }
-
-    updateGame();
-  };
 
   return (
     <>
@@ -416,21 +398,7 @@ export function GameOptionsModal({
             </div>
           </div>
 
-          {game.shop !== "custom" && (
-            <CheckboxField
-              label={
-                <div className="game-options-modal__cloud-sync-label">
-                  {t("enable_automatic_cloud_sync")}
-                  <span className="game-options-modal__cloud-sync-hydra-cloud">
-                    Hydra Cloud
-                  </span>
-                </div>
-              }
-              checked={automaticCloudSync}
-              disabled={!hasActiveSubscription || !game.executablePath}
-              onChange={handleToggleAutomaticCloudSync}
-            />
-          )}
+          {/* Cloud Sync option hidden for Leg3ndy version */}
 
           {game.executablePath && (
             <div className="game-options-modal__section">

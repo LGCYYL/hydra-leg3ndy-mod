@@ -19,7 +19,7 @@ export function BottomPanel() {
 
   const navigate = useNavigate();
 
-  const { userDetails } = useUserDetails();
+  // const { userDetails } = useUserDetails();
 
   const { library } = useLibrary();
 
@@ -29,15 +29,15 @@ export function BottomPanel() {
 
   const extraction = useAppSelector((state) => state.download.extraction);
 
-  // const [version, setVersion] = useState("");
+  const [version, setVersion] = useState("");
   // const [sessionHash, setSessionHash] = useState<null | string>("");
   const [commonRedistStatus, setCommonRedistStatus] = useState<string | null>(
     null
   );
 
-  /* useEffect(() => {
+  useEffect(() => {
     window.electron.getVersion().then((result) => setVersion(result));
-  }, []); */
+  }, []);
 
   useEffect(() => {
     const unlisten = window.electron.onCommonRedistProgress(
@@ -139,12 +139,13 @@ export function BottomPanel() {
         <small>{status}</small>
       </button>
 
-      <div
+      <button
+        type="button"
         className="bottom-panel__version-button"
-        style={{ cursor: "default" }}
+        onClick={() => navigate("/settings")}
       >
-        <small>v1.0.0 LEG3NDY Edition</small>
-      </div>
+        <small>v{version} LEG3NDY Edition</small>
+      </button>
     </footer>
   );
 }

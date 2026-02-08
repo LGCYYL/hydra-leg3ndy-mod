@@ -34,4 +34,23 @@ Depois de atualizar:
 ```bash
 git push --force-with-lease
 ```
-*(O `--force-with-lease` é necessário porque o `rebase` reescreve o histórico para deixar seus commits no topo)*
+
+### 4. Compilação do Python (RPC)
+O backend Python (`hydra-python-rpc`) precisa ser compilado separadamente antes do build principal.
+
+1.  Instale as dependências:
+    ```bash
+    pip install -r requirements.txt
+    ```
+2.  Compile o executável (gera pasta `hydra-python-rpc`):
+    ```bash
+    python python_rpc/setup.py build
+    ```
+
+### 5. Configurar Ludusavi (Backup de Saves)
+Garanta que o executável `ludusavi.exe` esteja na pasta `ludusavi/`.
+
+### 6. Buidar o projeto
+```bash
+npm run build:win
+```

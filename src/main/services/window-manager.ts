@@ -41,6 +41,7 @@ export class WindowManager {
       minWidth: 1024,
       minHeight: 860,
       backgroundColor: "#1c1c1c",
+      title: "LEG3NDY Hydra - Edition",
       titleBarStyle: process.platform === "linux" ? "default" : "hidden",
       icon,
       trafficLightPosition: { x: 16, y: 16 },
