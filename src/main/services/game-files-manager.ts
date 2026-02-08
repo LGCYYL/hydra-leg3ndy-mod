@@ -517,6 +517,10 @@ export class GameFilesManager {
         // Score based on name matching game title
         if (lowerName.includes(sanitizedTitle)) score += 10;
 
+        // Also check for title without spaces (e.g. "Geometry Dash" -> "geometrydash")
+        const titleNoSpaces = sanitizedTitle.replace(/\s+/g, "");
+        if (titleNoSpaces.length > 0 && lowerName.includes(titleNoSpaces)) score += 9;
+
         // Score based on common launcher names
         if (["launcher.exe", "start.exe", "play.exe"].includes(lowerName))
           score += 5;

@@ -4,9 +4,8 @@ import { Button, Modal, TextField } from "@renderer/components";
 import type { Game, LibraryGame, ShortcutLocation } from "@types";
 import { gameDetailsContext } from "@renderer/context";
 import { DeleteGameModal } from "@renderer/pages/downloads/delete-game-modal";
-import { useDownload, useToast, useUserDetails } from "@renderer/hooks";
+import { useDownload, useToast } from "@renderer/hooks";
 import { RemoveGameFromLibraryModal } from "./remove-from-library-modal";
-import { ResetAchievementsModal } from "./reset-achievements-modal";
 import { ChangeGamePlaytimeModal } from "./change-game-playtime-modal";
 import { FileDirectoryIcon, FileIcon } from "@primer/octicons-react";
 import SteamLogo from "@renderer/assets/steam-logo.svg?react";
@@ -38,7 +37,7 @@ export function GameOptionsModal({
     setShowRepacksModal,
     repacks,
     selectGameExecutable,
-    achievements,
+
   } = useContext(gameDetailsContext);
 
 
@@ -46,14 +45,12 @@ export function GameOptionsModal({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRemoveGameModal, setShowRemoveGameModal] = useState(false);
   const [launchOptions, setLaunchOptions] = useState(game.launchOptions ?? "");
-  const [showResetAchievementsModal, setShowResetAchievementsModal] =
-    useState(false);
-  const [showChangePlaytimeModal, setShowChangePlaytimeModal] = useState(false);
-  const [isDeletingAchievements, setIsDeletingAchievements] = useState(false);
+
 
   const [creatingSteamShortcut, setCreatingSteamShortcut] = useState(false);
   const [saveFolderPath, setSaveFolderPath] = useState<string | null>(null);
   const [loadingSaveFolder, setLoadingSaveFolder] = useState(false);
+  const [showChangePlaytimeModal, setShowChangePlaytimeModal] = useState(false);
 
   const {
     removeGameInstaller,
@@ -62,11 +59,7 @@ export function GameOptionsModal({
     cancelDownload,
   } = useDownload();
 
-  const { userDetails } = useUserDetails();
 
-  const hasAchievements =
-    (achievements?.filter((achievement) => achievement.unlocked).length ?? 0) >
-    0;
 
   const deleting = isGameDeleting(game.id);
 
@@ -267,18 +260,7 @@ export function GameOptionsModal({
   const shouldShowCreateStartMenuShortcut =
     window.electron.platform === "win32";
 
-  const handleResetAchievements = async () => {
-    setIsDeletingAchievements(true);
-    try {
-      await window.electron.resetGameAchievements(game.shop, game.objectId);
-      await updateGame();
-      showSuccessToast(t("reset_achievements_success"));
-    } catch (error) {
-      showErrorToast(t("reset_achievements_error"));
-    } finally {
-      setIsDeletingAchievements(false);
-    }
-  };
+
 
   const handleChangePlaytime = async (playtimeInSeconds: number) => {
     try {
@@ -311,12 +293,7 @@ export function GameOptionsModal({
         game={game}
       />
 
-      <ResetAchievementsModal
-        visible={showResetAchievementsModal}
-        onClose={() => setShowResetAchievementsModal(false)}
-        resetAchievements={handleResetAchievements}
-        game={game}
-      />
+
 
       <ChangeGamePlaytimeModal
         visible={showChangePlaytimeModal}
@@ -545,20 +522,7 @@ export function GameOptionsModal({
                 {t("remove_from_library")}
               </Button>
 
-              {game.shop !== "custom" && (
-                <Button
-                  onClick={() => setShowResetAchievementsModal(true)}
-                  theme="danger"
-                  disabled={
-                    deleting ||
-                    isDeletingAchievements ||
-                    !hasAchievements ||
-                    !userDetails
-                  }
-                >
-                  {t("reset_achievements")}
-                </Button>
-              )}
+              {/* Reset Achievements button hidden for Leg3ndy version */}
 
               <Button
                 onClick={() => setShowChangePlaytimeModal(true)}
