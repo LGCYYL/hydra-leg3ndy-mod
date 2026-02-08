@@ -347,7 +347,7 @@ export function GameOptionsModal({
               />
 
               <div className="game-options-modal__executable-field-buttons">
-                {game.executablePath && (
+                {game.executablePath ? (
                   <Button
                     type="button"
                     theme="outline"
@@ -355,6 +355,16 @@ export function GameOptionsModal({
                   >
                     {t("open_folder")}
                   </Button>
+                ) : (
+                  game.download?.downloadPath && (
+                    <Button
+                      type="button"
+                      theme="outline"
+                      onClick={handleOpenDownloadFolder}
+                    >
+                      {t("open_folder")}
+                    </Button>
+                  )
                 )}
                 {game.shop !== "custom" &&
                   window.electron.platform === "win32" && (
