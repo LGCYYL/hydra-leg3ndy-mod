@@ -8,6 +8,8 @@ import {
   useToast,
 } from "@renderer/hooks";
 
+import { AboutModal } from "@renderer/components";
+
 import "./bottom-panel.scss";
 
 import { useNavigate } from "react-router-dom";
@@ -29,6 +31,7 @@ export function BottomPanel() {
   const extraction = useAppSelector((state) => state.download.extraction);
 
   const [version, setVersion] = useState("");
+  const [showAboutModal, setShowAboutModal] = useState(false);
   // const [sessionHash, setSessionHash] = useState<null | string>("");
   const [commonRedistStatus, setCommonRedistStatus] = useState<string | null>(
     null
@@ -129,22 +132,31 @@ export function BottomPanel() {
   ]);
 
   return (
-    <footer className="bottom-panel">
-      <button
-        type="button"
-        className="bottom-panel__downloads-button"
-        onClick={() => navigate("/downloads")}
-      >
-        <small>{status}</small>
-      </button>
+    <>
+      <footer className="bottom-panel">
+        <button
+          type="button"
+          className="bottom-panel__downloads-button"
+          onClick={() => navigate("/downloads")}
+        >
+          <small>{status}</small>
+        </button>
 
-      <button
-        type="button"
-        className="bottom-panel__version-button"
-        onClick={() => navigate("/settings")}
-      >
-        <small>v{version} LEG3NDY Edition</small>
-      </button>
-    </footer>
+        <button
+          type="button"
+          className="bottom-panel__version-button"
+          onClick={() => setShowAboutModal(true)}
+        >
+          <small>v{version} LEG3NDY Edition</small>
+        </button>
+      </footer>
+
+      <AboutModal
+        visible={showAboutModal}
+        onClose={() => setShowAboutModal(false)}
+        version={version}
+      />
+    </>
   );
 }
+

@@ -884,5 +884,18 @@
     "preflight_downloading": "Baixando dependências",
     "preflight_installing": "Instalando dependências",
     "preflight_installing_detail": "{{detail}}"
+  },
+  "about": {
+    "about_title": "Sobre",
+    "about_description": "Esta versão do Hydra foi auditada e aprimorada pela LEG3NDY para garantir segurança, melhor experiência de uso e funcionalidades extras.",
+    "feature_security_title": "Segurança Auditada",
+    "feature_security_desc": "Código revisado para garantir que não há malware, mineradores ou backdoors.",
+    "feature_improvements_title": "Interface Aprimorada",
+    "feature_improvements_desc": "UX melhorada com detecção automática de executáveis e validação dinâmica.",
+    "feature_updates_title": "Atualizações Contínuas",
+    "feature_updates_desc": "Baseado no Hydra original, com melhorias exclusivas da LEG3NDY.",
+    "disclaimer": "Este software não é desenvolvido pela LEG3NDY, mas é auditado e mantido por nós. Atualizações são incorporadas do projeto original.",
+    "visit_website": "Visitar LEG3NDY",
+    "all_rights_reserved": "Todos os direitos reservados."
   }
 }
