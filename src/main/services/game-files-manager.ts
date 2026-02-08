@@ -26,7 +26,7 @@ export class GameFilesManager {
   constructor(
     private readonly shop: GameShop,
     private readonly objectId: string
-  ) {}
+  ) { }
 
   private get gameKey() {
     return levelKeys.game(this.shop, this.objectId);
@@ -208,10 +208,20 @@ export class GameFilesManager {
         return;
       }
 
-      const foundExePath = await this.findExecutableInFolder(
+      let foundExePath = await this.findExecutableInFolder(
         gameFolderPath,
         executableNames
       );
+
+      if (!foundExePath) {
+        logger.info(
+          `[GameFilesManager] API lookup failed. Trying heuristic search for ${this.objectId}`
+        );
+        foundExePath = await this.findBestExecutableHeuristic(
+          gameFolderPath,
+          game.title
+        );
+      }
 
       if (foundExePath) {
         logger.info(
@@ -458,6 +468,98 @@ export class GameFilesManager {
 
     return null;
   }
+
+  private async findBestExecutableHeuristic(
+    folderPath: string,
+    gameTitle: string
+  ): Promise<string | null> {
+    try {
+      const entries = await fs.promises.readdir(folderPath, {
+        withFileTypes: true,
+        recursive: true,
+      });
+
+      const exeFiles = entries.filter(
+        (entry) => entry.isFile() && entry.name.toLowerCase().endsWith(".exe")
+      );
+
+      if (exeFiles.length === 0) return null;
+
+      // Filter out obvious non-game executables
+      const blocklist = [
+        "uninstall",
+        "dxsetup",
+        "vcredist",
+        "unitycrashhandler",
+        "crashreport",
+        "config",
+        "settings",
+        "update",
+        "patch",
+        "language",
+        "server",
+      ];
+
+      const candidates = exeFiles.filter((file) => {
+        const lowerName = file.name.toLowerCase();
+        return !blocklist.some((term) => lowerName.includes(term));
+      });
+
+      if (candidates.length === 0) return null;
+
+      let bestCandidate: { path: string; score: number } | null = null;
+      const sanitizedTitle = removeSymbolsFromName(gameTitle).toLowerCase();
+
+      for (const candidate of candidates) {
+        let score = 0;
+        const lowerName = candidate.name.toLowerCase();
+        const parentPath =
+          "parentPath" in candidate
+            ? candidate.parentPath
+            : (candidate as unknown as { path?: string }).path || folderPath;
+
+        const fullPath = path.join(parentPath, candidate.name);
+
+        // Score based on name matching game title
+        if (lowerName.includes(sanitizedTitle)) score += 10;
+
+        // Score based on common launcher names
+        if (["launcher.exe", "start.exe", "play.exe"].includes(lowerName))
+          score += 5;
+
+        // Score based on file size (larger files are more likely to be the game)
+        try {
+          const stats = await fs.promises.stat(fullPath);
+          score += stats.size / (1024 * 1024); // Add size in MB to score
+        } catch {
+          // Ignore stat errors
+        }
+
+        // Penalty for being deep in subdirectories
+        const depth = fullPath.split(path.sep).length;
+        score -= depth;
+
+        if (!bestCandidate || score > bestCandidate.score) {
+          bestCandidate = { path: fullPath, score };
+        }
+      }
+
+      if (bestCandidate) {
+        logger.info(
+          `[GameFilesManager] Heuristic selected: ${bestCandidate.path} (Score: ${bestCandidate.score})`
+        );
+        return bestCandidate.path;
+      }
+    } catch (err) {
+      logger.error(
+        `[GameFilesManager] Heuristic search failed for ${folderPath}`,
+        err
+      );
+    }
+
+    return null;
+  }
+
 
   async extractDownloadedFile() {
     const [download, game] = await Promise.all([
