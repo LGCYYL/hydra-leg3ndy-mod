@@ -434,6 +434,29 @@ export class GameFilesManager {
     }
   }
 
+  private async findExecutablesRecursive(dir: string): Promise<string[]> {
+    let results: string[] = [];
+    try {
+      const list = await fs.promises.readdir(dir, { withFileTypes: true });
+      for (const entry of list) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          results = results.concat(
+            await this.findExecutablesRecursive(fullPath)
+          );
+        } else if (
+          entry.isFile() &&
+          entry.name.toLowerCase().endsWith(".exe")
+        ) {
+          results.push(fullPath);
+        }
+      }
+    } catch {
+      // Ignore access errors
+    }
+    return results;
+  }
+
   private async findExecutableInFolder(
     folderPath: string,
     executableNames: string[]
@@ -442,28 +465,12 @@ export class GameFilesManager {
       executableNames.map((name) => name.toLowerCase())
     );
 
-    try {
-      const entries = await fs.promises.readdir(folderPath, {
-        withFileTypes: true,
-        recursive: true,
-      });
+    const files = await this.findExecutablesRecursive(folderPath);
 
-      for (const entry of entries) {
-        if (!entry.isFile()) continue;
-
-        const fileName = entry.name.toLowerCase();
-
-        if (normalizedNames.has(fileName)) {
-          const parentPath =
-            "parentPath" in entry
-              ? entry.parentPath
-              : (entry as unknown as { path?: string }).path || folderPath;
-
-          return path.join(parentPath, entry.name);
-        }
+    for (const file of files) {
+      if (normalizedNames.has(path.basename(file).toLowerCase())) {
+        return file;
       }
-    } catch {
-      // Silently fail if folder cannot be read
     }
 
     return null;
@@ -474,14 +481,7 @@ export class GameFilesManager {
     gameTitle: string
   ): Promise<string | null> {
     try {
-      const entries = await fs.promises.readdir(folderPath, {
-        withFileTypes: true,
-        recursive: true,
-      });
-
-      const exeFiles = entries.filter(
-        (entry) => entry.isFile() && entry.name.toLowerCase().endsWith(".exe")
-      );
+      const exeFiles = await this.findExecutablesRecursive(folderPath);
 
       if (exeFiles.length === 0) return null;
 
@@ -500,8 +500,8 @@ export class GameFilesManager {
         "server",
       ];
 
-      const candidates = exeFiles.filter((file) => {
-        const lowerName = file.name.toLowerCase();
+      const candidates = exeFiles.filter((filePath) => {
+        const lowerName = path.basename(filePath).toLowerCase();
         return !blocklist.some((term) => lowerName.includes(term));
       });
 
@@ -510,15 +510,9 @@ export class GameFilesManager {
       let bestCandidate: { path: string; score: number } | null = null;
       const sanitizedTitle = removeSymbolsFromName(gameTitle).toLowerCase();
 
-      for (const candidate of candidates) {
+      for (const fullPath of candidates) {
         let score = 0;
-        const lowerName = candidate.name.toLowerCase();
-        const parentPath =
-          "parentPath" in candidate
-            ? candidate.parentPath
-            : (candidate as unknown as { path?: string }).path || folderPath;
-
-        const fullPath = path.join(parentPath, candidate.name);
+        const lowerName = path.basename(fullPath).toLowerCase();
 
         // Score based on name matching game title
         if (lowerName.includes(sanitizedTitle)) score += 10;
