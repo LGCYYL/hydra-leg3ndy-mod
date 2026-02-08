@@ -48,8 +48,7 @@ export function GameOptionsModal({
 
 
   const [creatingSteamShortcut, setCreatingSteamShortcut] = useState(false);
-  const [saveFolderPath, setSaveFolderPath] = useState<string | null>(null);
-  const [loadingSaveFolder, setLoadingSaveFolder] = useState(false);
+
   const [showChangePlaytimeModal, setShowChangePlaytimeModal] = useState(false);
 
   const {
@@ -68,21 +67,36 @@ export function GameOptionsModal({
   const isGameDownloading =
     game.download?.status === "active" && lastPacket?.gameId === game.id;
 
+  const [isScanning, setIsScanning] = useState(false);
+
+  // Validate executable exists when modal opens
   useEffect(() => {
-    if (
-      visible &&
-      game.shop !== "custom" &&
-      window.electron.platform === "win32"
-    ) {
-      setLoadingSaveFolder(true);
-      setSaveFolderPath(null);
+    const validateExecutable = async () => {
+      if (visible && game.executablePath) {
+        const exists = await window.electron.checkFileExists(game.executablePath);
+        if (!exists) {
+          // File doesn't exist, clear the path and re-scan
+          await window.electron.updateExecutablePath(game.shop, game.objectId, null);
+          updateGame();
+        }
+      }
+    };
+    validateExecutable();
+  }, [visible, game.executablePath, game.shop, game.objectId, updateGame]);
+
+  useEffect(() => {
+    if (visible && !game.executablePath && game.download?.downloadPath) {
+      setIsScanning(true);
       window.electron
-        .getGameSaveFolder(game.shop, game.objectId)
-        .then(setSaveFolderPath)
-        .catch(() => setSaveFolderPath(null))
-        .finally(() => setLoadingSaveFolder(false));
+        .scanForExecutable(game.shop, game.objectId)
+        .finally(() => {
+          setIsScanning(false);
+          updateGame();
+        });
     }
-  }, [visible, game.shop, game.objectId]);
+  }, [visible, game.executablePath, game.download?.downloadPath, game.shop, game.objectId, updateGame]);
+
+
 
   const debounceUpdateLaunchOptions = useRef(
     debounce(async (value: string) => {
@@ -185,15 +199,7 @@ export function GameOptionsModal({
     await window.electron.openGameExecutablePath(game.shop, game.objectId);
   };
 
-  const handleOpenSaveFolder = async () => {
-    if (saveFolderPath) {
-      await window.electron.openGameSaveFolder(
-        game.shop,
-        game.objectId,
-        saveFolderPath
-      );
-    }
-  };
+
 
   const handleClearExecutablePath = async () => {
     await window.electron.updateExecutablePath(game.shop, game.objectId, null);
@@ -323,7 +329,7 @@ export function GameOptionsModal({
                 readOnly
                 theme="dark"
                 disabled
-                placeholder={t("no_executable_selected")}
+                placeholder={isScanning ? t("scanning_executable") : t("no_executable_selected")}
                 rightContent={
                   <>
                     <Button
@@ -366,21 +372,6 @@ export function GameOptionsModal({
                     </Button>
                   )
                 )}
-                {game.shop !== "custom" &&
-                  window.electron.platform === "win32" && (
-                    <Button
-                      type="button"
-                      theme="outline"
-                      onClick={handleOpenSaveFolder}
-                      disabled={loadingSaveFolder || !saveFolderPath}
-                    >
-                      {loadingSaveFolder
-                        ? t("searching_save_folder")
-                        : saveFolderPath
-                          ? t("open_save_folder")
-                          : t("no_save_folder_found")}
-                    </Button>
-                  )}
               </div>
             </div>
           </div>

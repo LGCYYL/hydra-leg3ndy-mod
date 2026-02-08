@@ -244,6 +244,8 @@ declare global {
     deleteArchive: (filePath: string) => Promise<boolean>;
     getDefaultWinePrefixSelectionPath: () => Promise<string | null>;
     createSteamShortcut: (shop: GameShop, objectId: string) => Promise<void>;
+    scanForExecutable: (shop: GameShop, objectId: string) => Promise<void>;
+    checkFileExists: (filePath: string) => Promise<boolean>;
 
     /* Download sources */
     addDownloadSource: (url: string) => Promise<DownloadSource>;

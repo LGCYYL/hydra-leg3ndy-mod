@@ -191,11 +191,10 @@ export class GameFilesManager {
         this.objectId
       );
 
-      if (!executableNames || executableNames.length === 0) {
-        return;
-      }
-
       if (!download.folderName) {
+        logger.warn(
+          `[GameFilesManager] No folderName for game ${this.objectId}`
+        );
         return;
       }
 
@@ -205,17 +204,26 @@ export class GameFilesManager {
       );
 
       if (!fs.existsSync(gameFolderPath)) {
+        logger.warn(
+          `[GameFilesManager] Game folder does not exist: ${gameFolderPath}`
+        );
         return;
       }
 
-      let foundExePath = await this.findExecutableInFolder(
-        gameFolderPath,
-        executableNames
-      );
+      let foundExePath: string | null = null;
 
+      // Try API-based lookup first
+      if (executableNames && executableNames.length > 0) {
+        foundExePath = await this.findExecutableInFolder(
+          gameFolderPath,
+          executableNames
+        );
+      }
+
+      // Always fallback to heuristic search
       if (!foundExePath) {
         logger.info(
-          `[GameFilesManager] API lookup failed. Trying heuristic search for ${this.objectId}`
+          `[GameFilesManager] API lookup returned no results. Trying heuristic search for ${this.objectId}`
         );
         foundExePath = await this.findBestExecutableHeuristic(
           gameFolderPath,

@@ -6,7 +6,6 @@ import {
   useDownload,
   useLibrary,
   useToast,
-  useUserDetails,
 } from "@renderer/hooks";
 
 import "./bottom-panel.scss";
