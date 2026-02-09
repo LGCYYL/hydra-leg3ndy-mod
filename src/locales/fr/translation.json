@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Français",
   "app": {
     "successfully_signed_in": "Connecté avec succès"
@@ -795,7 +795,8 @@
     "achievement_earn_points": "Gagnez {{points}} points avec ce succès",
     "earned_points": "Points gagnés :",
     "available_points": "Points disponibles :",
-    "how_to_earn_achievements_points": "Comment gagner des points de succès ?"
+    "how_to_earn_achievements_points": "Comment gagner des points de succès ?",
+    "locked_achievement": "Succès verrouillé"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Abonnement Leg3ndy Hydra Cloud",
@@ -886,3 +887,4 @@
     "preflight_installing_detail": "{{detail}}"
   }
 }
+

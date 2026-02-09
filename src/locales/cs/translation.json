@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Čeština",
   "app": {
     "successfully_signed_in": "Úspěšně přihlášen"
@@ -485,7 +485,8 @@
     "achievement_earn_points": "Získej {{points}} bodů tímto achievementem",
     "earned_points": "Získané body",
     "available_points": "Dostupné body:",
-    "how_to_earn_achievements_points": "Jak získat body achievementů?"
+    "how_to_earn_achievements_points": "Jak získat body achievementů?",
+    "locked_achievement": "Zamčený úspěch"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Předplatné Leg3ndy Hydra Cloud",
@@ -502,3 +503,4 @@
     "debrid_description": "Stahovat až 4x rychleji s Nimbus"
   }
 }
+

@@ -49,7 +49,7 @@ const saveAchievementsOnLocal = async (
             achievements
           );
         })
-        .catch(() => {});
+        .catch(() => { });
     });
 };
 
@@ -131,7 +131,7 @@ export const mergeAchievements = async (
           isPlatinum:
             index === filteredAchievements.length - 1 &&
             newAchievements.length + unlockedAchievements.length ===
-              achievementsData.length,
+            achievementsData.length,
           iconUrl: achievement.icon,
         };
       });
@@ -155,6 +155,8 @@ export const mergeAchievements = async (
         totalAchievementCount: achievementsData.length,
         gameTitle: game.title,
         gameIcon: game.iconUrl,
+        shop: game.shop,
+        objectId: game.objectId,
       });
     }
   }

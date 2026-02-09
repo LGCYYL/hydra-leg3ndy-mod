@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Русский",
   "app": {
     "successfully_signed_in": "Успешный вход"
@@ -809,7 +809,8 @@
     "achievement_earn_points": "Заработайте {{points}} очков с этим достижением",
     "earned_points": "Заработано очков:",
     "available_points": "Доступные очки:",
-    "how_to_earn_achievements_points": "Как заработать очки достижений?"
+    "how_to_earn_achievements_points": "Как заработать очки достижений?",
+    "locked_achievement": "Заблокированное достижение"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Подписка Leg3ndy Hydra Cloud",
@@ -876,3 +877,4 @@
     "preflight_installing_detail": "{{detail}}"
   }
 }
+

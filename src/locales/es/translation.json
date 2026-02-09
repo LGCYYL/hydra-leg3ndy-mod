@@ -775,7 +775,8 @@
     "achievement_earn_points": "Conseguí {{points}} puntos por este logro",
     "earned_points": "Puntos obtenidos:",
     "available_points": "Puntos disponibles:",
-    "how_to_earn_achievements_points": "¿Como conseguir puntos por logros?"
+    "how_to_earn_achievements_points": "¿Como conseguir puntos por logros?",
+    "locked_achievement": "Logro Bloqueado"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Suscripción Leg3ndy Hydra Cloud",

@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Deutsch",
   "app": {
     "successfully_signed_in": "Erfolgreich angemeldet"
@@ -514,7 +514,8 @@
     "achievement_earn_points": "Verdiene {{points}} Punkte mit diesem Erfolg",
     "earned_points": "Verdiente Punkte:",
     "available_points": "Verfügbare Punkte:",
-    "how_to_earn_achievements_points": "Wie verdient man Erfolgspunkte?"
+    "how_to_earn_achievements_points": "Wie verdient man Erfolgspunkte?",
+    "locked_achievement": "Gesperrte Errungenschaft"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Leg3ndy Hydra Cloud-Abonnement",
@@ -531,3 +532,4 @@
     "debrid_description": "Lade bis zu 4x schneller mit Nimbus herunter"
   }
 }
+

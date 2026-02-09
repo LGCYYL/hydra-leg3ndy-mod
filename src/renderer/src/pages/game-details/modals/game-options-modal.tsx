@@ -7,6 +7,7 @@ import { DeleteGameModal } from "@renderer/pages/downloads/delete-game-modal";
 import { useDownload, useToast } from "@renderer/hooks";
 import { RemoveGameFromLibraryModal } from "./remove-from-library-modal";
 import { ChangeGamePlaytimeModal } from "./change-game-playtime-modal";
+import { ResetAchievementsModal } from "./reset-achievements-modal";
 import { FileDirectoryIcon, FileIcon } from "@primer/octicons-react";
 import SteamLogo from "@renderer/assets/steam-logo.svg?react";
 import { debounce } from "lodash-es";
@@ -50,6 +51,7 @@ export function GameOptionsModal({
   const [creatingSteamShortcut, setCreatingSteamShortcut] = useState(false);
 
   const [showChangePlaytimeModal, setShowChangePlaytimeModal] = useState(false);
+  const [showResetAchievementsModal, setShowResetAchievementsModal] = useState(false);
 
   const {
     removeGameInstaller,
@@ -308,6 +310,13 @@ export function GameOptionsModal({
         game={game}
       />
 
+      <ResetAchievementsModal
+        visible={showResetAchievementsModal}
+        onClose={() => setShowResetAchievementsModal(false)}
+        resetAchievements={() => window.electron.resetGameAchievements(game.shop, game.objectId)}
+        game={game}
+      />
+
       <Modal
         visible={visible}
         title={game.title}
@@ -523,7 +532,13 @@ export function GameOptionsModal({
                 {t("remove_from_library")}
               </Button>
 
-              {/* Reset Achievements button hidden for Leg3ndy version */}
+              <Button
+                onClick={() => setShowResetAchievementsModal(true)}
+                theme="danger"
+                disabled={deleting}
+              >
+                {t("reset_achievements")}
+              </Button>
 
               <Button
                 onClick={() => setShowChangePlaytimeModal(true)}

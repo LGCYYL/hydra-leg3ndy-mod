@@ -131,7 +131,8 @@ export function Sidebar() {
 
       {achievements && achievements.length > 0 && (
         <SidebarSection
-          title={t("achievements_total", {
+          title={t("achievements_count", {
+            unlockedCount: achievements.filter(a => a.unlocked).length,
             achievementsCount: achievements.length,
           })}
         >

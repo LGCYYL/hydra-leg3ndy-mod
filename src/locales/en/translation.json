@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "English",
   "app": {
     "successfully_signed_in": "Successfully signed in"
@@ -818,7 +818,10 @@
     "achievement_earn_points": "Earn {{points}} points with this achievement",
     "earned_points": "Earned points:",
     "available_points": "Available points:",
-    "how_to_earn_achievements_points": "How to earn achievements points?"
+    "how_to_earn_achievements_points": "How to earn achievements points?",
+    "locked_achievement": "Locked Achievement",
+    "points_explanation_1": "Achievement points are earned by unlocking achievements in games.",
+    "points_explanation_2": "Rarer and more difficult achievements are worth more points. Rarity is calculated based on the percentage of players who have unlocked each achievement."
   },
   "hydra_cloud": {
     "subscription_tour_title": "Leg3ndy Hydra Cloud Subscription",

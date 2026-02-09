@@ -166,7 +166,8 @@
     object-fit: cover;
 
     &--locked {
-      opacity: 0.8;
+      opacity: 0.5;
+      filter: grayscale(100%);
     }
   }
 }

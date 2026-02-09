@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "简体中文",
   "app": {
     "successfully_signed_in": "已成功登录"
@@ -710,7 +710,8 @@
     "available_points": "可用积分：",
     "earned_points": "获得积分：",
     "hidden_achievement_tooltip": "这是一个隐藏成就",
-    "how_to_earn_achievements_points": "如何获得成就积分？"
+    "how_to_earn_achievements_points": "如何获得成就积分？",
+    "locked_achievement": "已锁定的成就"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Leg3ndy Hydra 云订阅",
@@ -727,3 +728,4 @@
     "learn_more": "了解更多"
   }
 }
+

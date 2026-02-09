@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Türkçe",
   "app": {
     "successfully_signed_in": "Başarıyla giriş yapıldı"
@@ -744,7 +744,8 @@
     "achievement_earn_points": "Bu başarı ile {{points}} puan kazan",
     "earned_points": "Kazanılan puanlar:",
     "available_points": "Mevcut puanlar:",
-    "how_to_earn_achievements_points": "Başarı puanları nasıl kazanılır?"
+    "how_to_earn_achievements_points": "Başarı puanları nasıl kazanılır?",
+    "locked_achievement": "Kilitli Başarı"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Leg3ndy Hydra Cloud Aboneliği",
@@ -761,3 +762,4 @@
     "debrid_description": "Nimbus ile 4 kata kadar daha hızlı indirin"
   }
 }
+

@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Українська",
   "app": {
     "successfully_signed_in": "Успішний вхід в систему"
@@ -683,7 +683,8 @@
     "achievement_earn_points": " Отримайте {{points}} балів за це досягнення",
     "earned_points": "Отримано балів:",
     "available_points": "Доступно балів:",
-    "how_to_earn_achievements_points": "Як заробляти бали за досягнення?"
+    "how_to_earn_achievements_points": "Як заробляти бали за досягнення?",
+    "locked_achievement": "Заблоковане досягнення"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Підписка Leg3ndy Hydra Cloud",
@@ -700,3 +701,4 @@
     "debrid_description": "Завантажуйте до 4 разів швидше з Nimbus"
   }
 }
+

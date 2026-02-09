@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Suomi",
   "app": {
     "successfully_signed_in": "Kirjautuminen onnistui"
@@ -688,7 +688,8 @@
     "achievement_earn_points": "Ansaitse {{points}} pistettä tällä saavutuksella",
     "earned_points": "Ansaitut pisteet:",
     "available_points": "Saatavilla olevat pisteet:",
-    "how_to_earn_achievements_points": "Kuinka ansaita saavutuspisteitä?"
+    "how_to_earn_achievements_points": "Kuinka ansaita saavutuspisteitä?",
+    "locked_achievement": "Lukittu saavutus"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Leg3ndy Hydra Cloud -tilaus",
@@ -705,3 +706,4 @@
     "debrid_description": "Lataa 4 kertaa nopeammin Nimbuksella"
   }
 }
+

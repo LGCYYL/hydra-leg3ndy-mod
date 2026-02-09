@@ -10,7 +10,7 @@ import icon from "@resources/icon.png?asset";
 import { NotificationOptions, toXmlString } from "./xml";
 import { logger } from "../logger";
 import { WindowManager } from "../window-manager";
-import type { Game, UserPreferences, UserProfile } from "@types";
+import type { Game, GameShop, UserPreferences, UserProfile } from "@types";
 import { db, levelKeys, themesSublevel } from "@main/level";
 import { restartAndInstallUpdate } from "@main/events/autoupdater/restart-and-install-update";
 import { SystemPath } from "../system-path";
@@ -233,23 +233,25 @@ export const publishNewAchievementNotification = async (info: {
   totalAchievementCount: number;
   gameTitle: string;
   gameIcon: string | null;
+  shop: GameShop;
+  objectId: string;
 }) => {
   const partialOptions =
     info.achievements.length > 1
       ? {
-          title: t("achievements_unlocked_for_game", {
-            ns: "achievement",
-            gameTitle: info.gameTitle,
-            achievementCount: info.achievements.length,
-          }),
-          body: info.achievements.map((a) => a.title).join(", "),
-          icon: (await downloadImage(info.gameIcon)) ?? icon,
-        }
+        title: t("achievements_unlocked_for_game", {
+          ns: "achievement",
+          gameTitle: info.gameTitle,
+          achievementCount: info.achievements.length,
+        }),
+        body: info.achievements.map((a) => a.title).join(", "),
+        icon: (await downloadImage(info.gameIcon)) ?? icon,
+      }
       : {
-          title: t("achievement_unlocked", { ns: "achievement" }),
-          body: info.achievements[0].title,
-          icon: (await downloadImage(info.achievements[0].iconUrl)) ?? icon,
-        };
+        title: t("achievement_unlocked", { ns: "achievement" }),
+        body: info.achievements[0].title,
+        icon: (await downloadImage(info.achievements[0].iconUrl)) ?? icon,
+      };
 
   const options: NotificationOptions = {
     ...partialOptions,
@@ -275,4 +277,15 @@ export const publishNewAchievementNotification = async (info: {
     const soundPath = await getAchievementSoundPath();
     sound.play(soundPath);
   }
+
+  // Save to local notification history
+  await LocalNotificationManager.createNotification(
+    "ACHIEVEMENT_UNLOCKED",
+    partialOptions.title,
+    partialOptions.body,
+    {
+      pictureUrl: info.achievements[0]?.iconUrl ?? info.gameIcon,
+      url: `/game/${info.shop}/${info.objectId}?achievements`,
+    }
+  );
 };

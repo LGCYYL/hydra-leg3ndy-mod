@@ -1,9 +1,9 @@
 import {
   useContext,
   useEffect,
-  // useMemo,
+  useMemo,
   useState,
-  // useCallback,
+  useCallback,
   useRef,
 } from "react";
 import {
@@ -19,7 +19,7 @@ import languageResources from "@locales";
 import { orderBy } from "lodash-es";
 import { settingsContext } from "@renderer/context";
 import "./settings-general.scss";
-import { DesktopDownloadIcon /* UnmuteIcon */ } from "@primer/octicons-react";
+import { DesktopDownloadIcon, UnmuteIcon } from "@primer/octicons-react";
 import { logger } from "@renderer/logger";
 import { AchievementCustomNotificationPosition } from "@types";
 
@@ -144,7 +144,7 @@ export function SettingsGeneral() {
     }
   }, [userPreferences, defaultDownloadsPath]);
 
-  /* const achievementCustomNotificationPositionOptions = useMemo(() => {
+  const achievementCustomNotificationPositionOptions = useMemo(() => {
     return [
       "top-left",
       "top-center",
@@ -157,7 +157,7 @@ export function SettingsGeneral() {
       value: position,
       label: t(position),
     }));
-  }, [t]); */
+  }, [t]);
 
   const handleLanguageChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -173,7 +173,7 @@ export function SettingsGeneral() {
     await updateUserPreferences(values);
   };
 
-  /* const handleVolumeChange = useCallback(
+  const handleVolumeChange = useCallback(
     (newVolume: number) => {
       setForm((prev) => ({ ...prev, achievementSoundVolume: newVolume }));
 
@@ -186,9 +186,9 @@ export function SettingsGeneral() {
       }, 300);
     },
     [updateUserPreferences]
-  ); */
+  );
 
-  /* const handleChangeAchievementCustomNotificationPosition = async (
+  const handleChangeAchievementCustomNotificationPosition = async (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const value = event.target.value as AchievementCustomNotificationPosition;
@@ -196,7 +196,7 @@ export function SettingsGeneral() {
     await handleChange({ achievementCustomNotificationPosition: value });
 
     window.electron.updateAchievementCustomNotificationWindow();
-  }; */
+  };
 
   const handleChooseDownloadsPath = async () => {
     const { filePaths } = await window.electron.showOpenDialog({
@@ -299,7 +299,8 @@ export function SettingsGeneral() {
         }
       />
 
-      {/* <CheckboxField
+      {/* Friend system not implemented yet
+      <CheckboxField
         label={t("enable_friend_request_notifications")}
         checked={form.friendRequestNotificationsEnabled}
         onChange={() =>
@@ -320,6 +321,7 @@ export function SettingsGeneral() {
           })
         }
       />
+      */}
 
       <CheckboxField
         label={t("enable_achievement_notifications")}
@@ -399,7 +401,7 @@ export function SettingsGeneral() {
             </span>
           </div>
         </div>
-      )} */}
+      )}
 
       <h2 className="settings-general__section-title">{t("common_redist")}</h2>
 

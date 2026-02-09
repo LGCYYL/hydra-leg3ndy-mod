@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "العربية",
   "app": {
     "successfully_signed_in": "تم تسجيل الدخول بنجاح"
@@ -462,7 +462,8 @@
     "achievement_earn_points": "احصل على {{points}} نقاط مع هذا الإنجاز",
     "earned_points": "النقاط المكتسبة:",
     "available_points": "النقاط المتاحة:",
-    "how_to_earn_achievements_points": "كيفية كسب نقاط الإنجازات؟"
+    "how_to_earn_achievements_points": "كيفية كسب نقاط الإنجازات؟",
+    "locked_achievement": "إنجاز مقفل"
   },
   "hydra_cloud": {
     "subscription_tour_title": "اشتراك Leg3ndy Hydra Cloud",
@@ -478,3 +479,4 @@
     "learn_more": "معرفة المزيد"
   }
 }
+

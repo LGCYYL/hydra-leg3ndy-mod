@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Български",
   "app": {
     "successfully_signed_in": "Успешно влизане"
@@ -494,7 +494,8 @@
     "achievement_earn_points": "Спечелете {{points}} точки с това постижение",
     "earned_points": "Спечелени точки:",
     "available_points": "Налични точки:",
-    "how_to_earn_achievements_points": "Как се печелят точки от постижения?"
+    "how_to_earn_achievements_points": "Как се печелят точки от постижения?",
+    "locked_achievement": "Заключено постижение"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Абонамент за Leg3ndy Hydra Cloud",
@@ -511,3 +512,4 @@
     "debrid_description": "Изтегляйте до 4 пъти по-бързо с Nimbus"
   }
 }
+

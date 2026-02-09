@@ -166,7 +166,7 @@ export function SettingsBehavior() {
         }
       />
 
-      {/* <CheckboxField
+      <CheckboxField
         label={t("show_hidden_achievement_description")}
         checked={form.showHiddenAchievementsDescription}
         onChange={() =>
@@ -175,7 +175,7 @@ export function SettingsBehavior() {
               !form.showHiddenAchievementsDescription,
           })
         }
-      /> */}
+      />
 
       <CheckboxField
         label={t("show_download_speed_in_megabytes")}

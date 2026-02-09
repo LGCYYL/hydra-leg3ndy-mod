@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Uzbek",
   "app": {
     "successfully_signed_in": "Kirish muvaffaqiyatli amalga oshirildi"
@@ -456,7 +456,8 @@
     "achievement_earn_points": "Bu yutuq bilan {{points}} ball to'plang",
     "earned_points": "To'plangan ballar:",
     "available_points": "Mavjud ballar:",
-    "how_to_earn_achievements_points": "Yutuq ballarini qanday to'plash mumkin?"
+    "how_to_earn_achievements_points": "Yutuq ballarini qanday to'plash mumkin?",
+    "locked_achievement": "Qulflangan yutuq"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Leg3ndy Hydra Cloud obunasi",
@@ -473,3 +474,4 @@
     "debrid_description": "Nimbus bilan 4 barobar tezroq yuklab oling"
   }
 }
+

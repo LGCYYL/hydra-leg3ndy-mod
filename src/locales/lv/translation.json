@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Latviešu",
   "app": {
     "successfully_signed_in": "Veiksmīga pieteikšanās"
@@ -688,7 +688,8 @@
     "achievement_earn_points": "Nopelniet {{points}} punktus ar šo sasniegumu",
     "earned_points": "Nopelnītie punkti:",
     "available_points": "Pieejamie punkti:",
-    "how_to_earn_achievements_points": "Kā nopelnīt sasniegumu punktus?"
+    "how_to_earn_achievements_points": "Kā nopelnīt sasniegumu punktus?",
+    "locked_achievement": "Bloķēts sasniegums"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Leg3ndy Hydra Cloud abonements",
@@ -705,3 +706,4 @@
     "debrid_description": "Lejupielādējiet 4 reizes ātrāk ar Nimbus"
   }
 }
+

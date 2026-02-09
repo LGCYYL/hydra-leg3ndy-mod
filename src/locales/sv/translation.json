@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Svenska",
   "app": {
     "successfully_signed_in": "Inloggningen lyckades"
@@ -513,7 +513,8 @@
     "achievement_earn_points": "Tjäna {{points}} poäng med denna prestation",
     "earned_points": "Tjänade poäng:",
     "available_points": "Tillgängliga poäng:",
-    "how_to_earn_achievements_points": "Hur tjänar man poäng på prestationer?"
+    "how_to_earn_achievements_points": "Hur tjänar man poäng på prestationer?",
+    "locked_achievement": "Låst prestation"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Leg3ndy Hydra Cloud-abonnemang",
@@ -530,3 +531,4 @@
     "debrid_description": "Ladda ner upp till 4x snabbare med Nimbus"
   }
 }
+

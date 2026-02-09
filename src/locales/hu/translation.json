@@ -1,4 +1,4 @@
-{
+﻿{
   "language_name": "Magyar",
   "app": {
     "successfully_signed_in": "Sikeresen bejelentkeztél"
@@ -775,7 +775,8 @@
     "achievement_earn_points": "Szerezz be {{points}} pontot ezzel az achievement-el",
     "earned_points": "Megszerzett pontok:",
     "available_points": "Elérhető pontok:",
-    "how_to_earn_achievements_points": "Hogy lehet elérni achievement pontokat?"
+    "how_to_earn_achievements_points": "Hogy lehet elérni achievement pontokat?",
+    "locked_achievement": "Zárt eredmény"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Leg3ndy Hydra Cloud Előfizetés",
@@ -828,3 +829,4 @@
     "friend_request_refused": "Barátfelkérés elutasítva"
   }
 }
+

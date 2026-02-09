@@ -111,9 +111,16 @@ $logo-max-width: 200px;
       height: 54px;
       border-radius: 4px;
       object-fit: cover;
+      cursor: pointer;
+      transition: transform ease 0.2s;
+
+      &:hover {
+        transform: scale(1.1);
+      }
 
       &--locked {
-        opacity: 0.8;
+        opacity: 0.5;
+        filter: grayscale(100%);
       }
     }
 
@@ -257,6 +264,56 @@ $logo-max-width: 200px;
 
     &:hover {
       text-decoration: underline;
+    }
+  }
+
+  &__preview-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: globals.$spacing-unit * 2;
+    padding: globals.$spacing-unit * 2;
+
+    &__image {
+      width: 128px;
+      height: 128px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: globals.$spacing-unit;
+      text-align: center;
+    }
+
+    &__description {
+      color: globals.$muted-color;
+      max-width: 300px;
+    }
+
+    &__points {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+      color: globals.$body-color;
+    }
+
+    &__points-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    &__unlock-time {
+      color: globals.$muted-color;
+    }
+
+    &__locked {
+      color: globals.$warning-color;
+      font-style: italic;
     }
   }
 }

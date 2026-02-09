@@ -4,6 +4,7 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
   PlayIcon,
+  XIcon,
 } from "@primer/octicons-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { gameDetailsContext } from "@renderer/context";
@@ -23,6 +24,7 @@ export function GallerySlider() {
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -177,87 +179,132 @@ export function GallerySlider() {
     return screenshotPreviews;
   }, [shopDetails]);
 
+  const handleImageClick = (item: (typeof mediaItems)[0]) => {
+    if (item.type === "image" && item.src) {
+      setPreviewImage(item.src);
+    }
+  };
+
+  const closePreview = () => {
+    setPreviewImage(null);
+  };
+
+  // Close on escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && previewImage) {
+        closePreview();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [previewImage]);
+
   if (!hasScreenshots) {
     return null;
   }
 
   return (
-    <div className="gallery-slider__container">
-      <div className="gallery-slider__viewport" ref={emblaRef}>
-        <div className="gallery-slider__container-inner">
-          {mediaItems.map((item) => (
-            <div key={item.id} className="gallery-slider__slide">
-              {item.type === "video" ? (
-                <VideoPlayer
-                  videoSrc={item.videoSrc}
-                  videoType={item.videoType}
-                  poster={item.poster}
-                  autoplay={autoplayEnabled}
-                  loop
-                  muted
-                  controls
-                  className="gallery-slider__media"
-                  tabIndex={-1}
-                />
-              ) : (
-                <img
-                  className="gallery-slider__media"
-                  src={item.src}
-                  alt={item.alt}
-                  loading="lazy"
-                />
-              )}
-            </div>
-          ))}
+    <>
+      {/* Image Preview Modal */}
+      {previewImage && (
+        <div
+          className="gallery-slider__preview-modal"
+          onClick={closePreview}
+        >
+          <button
+            className="gallery-slider__preview-modal-close"
+            onClick={closePreview}
+            aria-label="Close preview"
+          >
+            <XIcon size={24} />
+          </button>
+          <img
+            src={previewImage}
+            alt="Preview"
+            className="gallery-slider__preview-modal-image"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
+
+      <div className="gallery-slider__container">
+        <div className="gallery-slider__viewport" ref={emblaRef}>
+          <div className="gallery-slider__container-inner">
+            {mediaItems.map((item) => (
+              <div key={item.id} className="gallery-slider__slide">
+                {item.type === "video" ? (
+                  <VideoPlayer
+                    videoSrc={item.videoSrc}
+                    videoType={item.videoType}
+                    poster={item.poster}
+                    autoplay={autoplayEnabled}
+                    loop
+                    muted
+                    controls
+                    className="gallery-slider__media"
+                    tabIndex={-1}
+                  />
+                ) : (
+                  <img
+                    className="gallery-slider__media gallery-slider__media--clickable"
+                    src={item.src}
+                    alt={item.alt}
+                    loading="lazy"
+                    onClick={() => handleImageClick(item)}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={scrollPrev}
+            type="button"
+            className="gallery-slider__button gallery-slider__button--left"
+            aria-label={t("previous_screenshot")}
+            tabIndex={0}
+          >
+            <ChevronLeftIcon size={36} />
+          </button>
+
+          <button
+            onClick={scrollNext}
+            type="button"
+            className="gallery-slider__button gallery-slider__button--right"
+            aria-label={t("next_screenshot")}
+            tabIndex={0}
+          >
+            <ChevronRightIcon size={36} />
+          </button>
         </div>
 
-        <button
-          onClick={scrollPrev}
-          type="button"
-          className="gallery-slider__button gallery-slider__button--left"
-          aria-label={t("previous_screenshot")}
-          tabIndex={0}
-        >
-          <ChevronLeftIcon size={36} />
-        </button>
-
-        <button
-          onClick={scrollNext}
-          type="button"
-          className="gallery-slider__button gallery-slider__button--right"
-          aria-label={t("next_screenshot")}
-          tabIndex={0}
-        >
-          <ChevronRightIcon size={36} />
-        </button>
+        <div className="gallery-slider__preview">
+          {previews.map((media, i) => (
+            <button
+              key={media.id}
+              type="button"
+              className={`gallery-slider__preview-button ${selectedIndex === i
+                  ? "gallery-slider__preview-button--active"
+                  : ""
+                }`}
+              onClick={(e) => scrollToPreview(i, e)}
+              aria-label={t("open_screenshot", { number: String(i + 1) })}
+            >
+              <img
+                src={media.thumbnail}
+                className="gallery-slider__preview-image"
+                alt={t("screenshot", { number: String(i + 1) })}
+              />
+              {media.type === "video" && (
+                <div className="gallery-slider__play-overlay">
+                  <PlayIcon size={20} />
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
       </div>
-
-      <div className="gallery-slider__preview">
-        {previews.map((media, i) => (
-          <button
-            key={media.id}
-            type="button"
-            className={`gallery-slider__preview-button ${
-              selectedIndex === i
-                ? "gallery-slider__preview-button--active"
-                : ""
-            }`}
-            onClick={(e) => scrollToPreview(i, e)}
-            aria-label={t("open_screenshot", { number: String(i + 1) })}
-          >
-            <img
-              src={media.thumbnail}
-              className="gallery-slider__preview-image"
-              alt={t("screenshot", { number: String(i + 1) })}
-            />
-            {media.type === "video" && (
-              <div className="gallery-slider__play-overlay">
-                <PlayIcon size={20} />
-              </div>
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
