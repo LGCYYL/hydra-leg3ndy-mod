@@ -29,7 +29,7 @@ jobs:
           node-version: 22.21.0
 
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Install Python
         uses: actions/setup-python@v5
@@ -51,7 +51,7 @@ jobs:
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
-          yarn build:linux
+          npm run build:linux
         env:
           MAIN_VITE_API_URL: ${{ vars.MAIN_VITE_STAGING_API_URL }}
           MAIN_VITE_AUTH_URL: ${{ vars.MAIN_VITE_STAGING_AUTH_URL }}
@@ -68,7 +68,7 @@ jobs:
 
       - name: Build Windows
         if: matrix.os == 'windows-2022'
-        run: yarn build:win
+        run: npm run build:win
         env:
           MAIN_VITE_API_URL: ${{ vars.MAIN_VITE_STAGING_API_URL }}
           MAIN_VITE_AUTH_URL: ${{ vars.MAIN_VITE_STAGING_AUTH_URL }}

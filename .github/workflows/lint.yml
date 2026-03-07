@@ -20,16 +20,16 @@ jobs:
           node-version: 22.21.0
 
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Validate current commit (last commit) with commitlint
         run: npx commitlint --last --verbose
 
       - name: Typecheck
-        run: yarn typecheck
+        run: npm run typecheck
 
       - name: Lint
-        run: yarn lint
+        run: npm run lint
 
       - name: Format check
-        run: yarn format-check
+        run: npm run format-check
