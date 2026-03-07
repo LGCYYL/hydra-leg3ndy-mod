@@ -6,6 +6,7 @@ import "./autoupdater";
 import "./catalogue";
 import "./cloud-save";
 import "./download-sources";
+import "./local-save";
 import "./hardware";
 import "./library";
 import "./leveldb";

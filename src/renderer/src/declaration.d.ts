@@ -286,6 +286,34 @@ declare global {
       objectId: string,
       backupPath: string | null
     ) => Promise<void>;
+
+    /* Local save */
+    searchCatalogue: <T>(data: any) => Promise<T>;
+    saveLocalBackup: (
+      objectId: string,
+      shop: GameShop,
+      label: string
+    ) => Promise<import("@types").LocalSaveArtifact>;
+    restoreLocalBackup: (
+      objectId: string,
+      shop: GameShop,
+      artifactId: string
+    ) => Promise<boolean>;
+    deleteLocalBackup: (
+      objectId: string,
+      shop: GameShop,
+      artifactId: string
+    ) => Promise<boolean>;
+    onLocalBackupComplete: (
+      objectId: string,
+      shop: GameShop,
+      cb: (success: boolean) => void
+    ) => () => Electron.IpcRenderer;
+    onLocalBackupRestoreComplete: (
+      objectId: string,
+      shop: GameShop,
+      cb: (success: boolean) => void
+    ) => () => Electron.IpcRenderer;
     onBackupDownloadComplete: (
       objectId: string,
       shop: GameShop,

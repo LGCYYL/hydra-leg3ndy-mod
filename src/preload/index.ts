@@ -347,6 +347,43 @@ contextBridge.exposeInMainWorld("electron", {
     objectId: string,
     backupPath: string | null
   ) => ipcRenderer.invoke("selectGameBackupPath", shop, objectId, backupPath),
+
+  /* Local save */
+  searchCatalogue: <T>(data: any) =>
+    ipcRenderer.invoke("searchCatalogue", data).then((res) => res as T),
+  saveLocalBackup: (
+    objectId: string,
+    shop: GameShop,
+    label: string
+  ) => ipcRenderer.invoke("saveLocalBackup", objectId, shop, label),
+  restoreLocalBackup: (
+    objectId: string,
+    shop: GameShop,
+    artifactId: string
+  ) => ipcRenderer.invoke("restoreLocalBackup", objectId, shop, artifactId),
+  deleteLocalBackup: (
+    objectId: string,
+    shop: GameShop,
+    artifactId: string
+  ) => ipcRenderer.invoke("deleteLocalBackup", objectId, shop, artifactId),
+  onLocalBackupComplete: (objectId: string, shop: GameShop, cb: (success: boolean) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, success: boolean) => cb(success);
+    ipcRenderer.on(`on-local-backup-complete-${objectId}-${shop}`, listener);
+    return () =>
+      ipcRenderer.removeListener(
+        `on-local-backup-complete-${objectId}-${shop}`,
+        listener
+      );
+  },
+  onLocalBackupRestoreComplete: (objectId: string, shop: GameShop, cb: (success: boolean) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, success: boolean) => cb(success);
+    ipcRenderer.on(`on-local-backup-restore-complete-${objectId}-${shop}`, listener);
+    return () =>
+      ipcRenderer.removeListener(
+        `on-local-backup-restore-complete-${objectId}-${shop}`,
+        listener
+      );
+  },
   onUploadComplete: (objectId: string, shop: GameShop, cb: () => void) => {
     const listener = (_event: Electron.IpcRendererEvent) => cb();
     ipcRenderer.on(`on-upload-complete-${objectId}-${shop}`, listener);

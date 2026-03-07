@@ -6,6 +6,7 @@ import axios from "axios";
 import { ProcessPayload } from "./download/types";
 import { db, gamesSublevel, levelKeys } from "@main/level";
 import { CloudSync } from "./cloud-sync";
+import { saveLocalBackup } from "../events/local-save";
 import { logger } from "./logger";
 import path from "path";
 import { AchievementWatcherManager } from "./achievements/achievement-watcher-manager";
@@ -36,7 +37,7 @@ const getGameExecutables = async () => {
     await axios
       .get(
         import.meta.env.MAIN_VITE_EXTERNAL_RESOURCES_URL +
-          "/game-executables.json"
+        "/game-executables.json"
       )
       .catch(() => {
         return { data: {} };
@@ -216,7 +217,7 @@ function onOpenGame(game: Game) {
         WindowManager.mainWindow?.hide();
       }
     })
-    .catch(() => {});
+    .catch(() => { });
 
   if (game.shop === "custom") return;
 
@@ -237,18 +238,18 @@ function onOpenGame(game: Game) {
           unsyncedDeltaPlayTimeInMilliseconds: 0,
         });
       })
-      .catch(() => {});
+      .catch(() => { });
 
     if (game.automaticCloudSync) {
-      CloudSync.uploadSaveGame(
+      saveLocalBackup(
+        null,
         game.objectId,
         game.shop,
-        null,
         CloudSync.getBackupLabel(true)
-      );
+      ).catch(() => { });
     }
   } else {
-    createGame({ ...game, lastTimePlayed: new Date() }).catch(() => {});
+    createGame({ ...game, lastTimePlayed: new Date() }).catch(() => { });
   }
 }
 
@@ -327,12 +328,12 @@ const onCloseGame = (game: Game) => {
 
   if (game.remoteId) {
     if (game.automaticCloudSync) {
-      CloudSync.uploadSaveGame(
+      saveLocalBackup(
+        null,
         game.objectId,
         game.shop,
-        null,
         CloudSync.getBackupLabel(true)
-      );
+      ).catch(() => { });
     }
 
     const deltaToSync =
@@ -354,7 +355,7 @@ const onCloseGame = (game: Game) => {
         });
       });
   } else {
-    return createGame(game).catch(() => {});
+    return createGame(game).catch(() => { });
   }
 };
 

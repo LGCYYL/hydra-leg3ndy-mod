@@ -8,6 +8,18 @@ import type { DownloadStatus } from "./download.types";
 
 export type SubscriptionStatus = "active" | "pending" | "cancelled";
 
+export interface LocalSaveArtifact {
+  id: string;
+  objectId: string;
+  shop: GameShop;
+  label: string;
+  createdAt: string;
+  artifactLengthInBytes: number;
+  homeDir: string | null;
+  winePrefixPath: string | null;
+  path: string;
+}
+
 export interface Subscription {
   id: string;
   status: SubscriptionStatus;
@@ -66,6 +78,7 @@ export interface Game {
   newDownloadOptionsCount?: number;
   installedSizeInBytes?: number | null;
   installerSizeInBytes?: number | null;
+  localSaveArtifacts?: LocalSaveArtifact[];
 }
 
 export interface Download {

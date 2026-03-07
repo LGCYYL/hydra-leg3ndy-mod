@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Modal, TextField } from "@renderer/components";
+import { Button, Modal, TextField, CheckboxField } from "@renderer/components";
 import type { Game, LibraryGame, ShortcutLocation } from "@types";
 import { gameDetailsContext } from "@renderer/context";
 import { DeleteGameModal } from "@renderer/pages/downloads/delete-game-modal";
@@ -52,6 +52,10 @@ export function GameOptionsModal({
 
   const [showChangePlaytimeModal, setShowChangePlaytimeModal] = useState(false);
   const [showResetAchievementsModal, setShowResetAchievementsModal] = useState(false);
+
+  const [isBackingUpLocal, setIsBackingUpLocal] = useState(false);
+  const [isRestoringLocal, setIsRestoringLocal] = useState(false);
+  const [autoBackupLocal, setAutoBackupLocal] = useState(game.automaticCloudSync ?? false);
 
   const {
     removeGameInstaller,
@@ -281,6 +285,52 @@ export function GameOptionsModal({
       showSuccessToast(t("update_playtime_success"));
     } catch (error) {
       showErrorToast(t("update_playtime_error"));
+    }
+  };
+
+  const handleBackupLocalSave = async () => {
+    try {
+      setIsBackingUpLocal(true);
+      await window.electron.saveLocalBackup(game.objectId, game.shop, "Manual Backup");
+      showSuccessToast(t("backup_local_save_success"));
+      updateGame();
+    } catch (err) {
+      showErrorToast(t("backup_local_save_error"));
+    } finally {
+      setIsBackingUpLocal(false);
+    }
+  };
+
+  const handleRestoreLocalSave = async () => {
+    if (!game.localSaveArtifacts?.length) return;
+
+    // For simplicity, just restore the most recent one
+    const artifact = game.localSaveArtifacts[game.localSaveArtifacts.length - 1];
+
+    try {
+      setIsRestoringLocal(true);
+      await window.electron.restoreLocalBackup(game.objectId, game.shop, artifact.id);
+      showSuccessToast(t("restore_local_save_success"));
+    } catch (err) {
+      showErrorToast(t("restore_local_save_error"));
+    } finally {
+      setIsRestoringLocal(false);
+    }
+  };
+
+  const handleToggleAutoBackup = async () => {
+    const newValue = !autoBackupLocal;
+    setAutoBackupLocal(newValue);
+
+    const gameKey = getGameKey(game.shop, game.objectId);
+    const gameData = (await levelDBService.get(gameKey, "games")) as Game | null;
+    if (gameData) {
+      await levelDBService.put(
+        gameKey,
+        { ...gameData, automaticCloudSync: newValue },
+        "games"
+      );
+      updateGame();
     }
   };
 
@@ -514,6 +564,56 @@ export function GameOptionsModal({
               </div>
             </div>
           )}
+
+          {/* Local Save Backup Section */}
+          <div className="game-options-modal__section">
+            <div className="game-options-modal__header">
+              <h2>{t("local_saves_backup")}</h2>
+              <h4 className="game-options-modal__header-description">
+                {t("local_saves_description")}
+              </h4>
+            </div>
+
+            <div className="game-options-modal__row">
+              <Button
+                onClick={handleBackupLocalSave}
+                theme="outline"
+                disabled={isBackingUpLocal}
+              >
+                {t("backup_local_save")}
+              </Button>
+
+              <Button
+                onClick={handleRestoreLocalSave}
+                theme="outline"
+                disabled={isRestoringLocal || !game.localSaveArtifacts?.length}
+              >
+                {t("restore_local_save")}
+              </Button>
+            </div>
+
+            <div style={{ marginTop: 16 }}>
+              {game.localSaveArtifacts && game.localSaveArtifacts.length > 0 ? (
+                <p style={{ margin: 0, fontSize: 13, color: "#ccc" }}>
+                  {t("local_backup_date", {
+                    date: new Date(game.localSaveArtifacts[game.localSaveArtifacts.length - 1].createdAt).toLocaleString()
+                  })}
+                </p>
+              ) : (
+                <p style={{ margin: 0, fontSize: 13, color: "#ccc" }}>
+                  {t("no_local_backup_found")}
+                </p>
+              )}
+            </div>
+
+            <div style={{ marginTop: 16 }}>
+              <CheckboxField
+                label={t("auto_backup_local")}
+                checked={autoBackupLocal}
+                onChange={handleToggleAutoBackup}
+              />
+            </div>
+          </div>
 
           <div className="game-options-modal__danger-zone">
             <div className="game-options-modal__header">

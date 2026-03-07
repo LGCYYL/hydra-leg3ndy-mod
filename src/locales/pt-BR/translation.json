@@ -132,6 +132,17 @@
     "installation_complete_message": "Componentes recomendados instalados com sucesso"
   },
   "game_details": {
+    "local_saves_backup": "Backup Local de Saves",
+    "local_saves_description": "Gerencie seus saves localmente, protegendo seu progresso mesmo se o jogo for desinstalado.",
+    "backup_local_save": "Fazer Backup Local Agora",
+    "restore_local_save": "Restaurar Último Backup",
+    "restore_local_save_success": "Save restaurado com sucesso!",
+    "restore_local_save_error": "Erro ao restaurar o save.",
+    "backup_local_save_success": "Backup do save concluído com sucesso!",
+    "backup_local_save_error": "Erro ao fazer o backup do save.",
+    "auto_backup_local": "Backup Automático ao fechar o jogo",
+    "no_local_backup_found": "Nenhum backup local encontrado.",
+    "local_backup_date": "Último Backup: {{date}}",
     "open_download_options": "Ver opções de download",
     "download_options_zero": "Sem opções de download",
     "download_options_one": "{{count}} opção de download",

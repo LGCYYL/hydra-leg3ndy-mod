@@ -118,27 +118,8 @@ export function App() {
 
   const setupWorkWonders = useCallback(
     async (token?: string, locale?: string) => {
-      if (workwondersRef.current) return;
-
-      workwondersRef.current = new WorkWonders();
-
-      const possibleLocales = ["en", "pt", "ru"];
-
-      const parsedLocale =
-        possibleLocales.find((l) => l === locale?.slice(0, 2)) ?? "en";
-
-      await workwondersRef.current.init({
-        organization: "hydra",
-        token,
-        locale: parsedLocale,
-      });
-
-      await workwondersRef.current.changelog.initChangelogWidget();
-      workwondersRef.current.changelog.initChangelogWidgetMini();
-
-      if (token) {
-        workwondersRef.current.feedback.initFeedbackWidget();
-      }
+      // Disabled for Leg3ndy Edition since we don't use Hydra's WorkWonders org
+      return;
     },
     [workwondersRef]
   );

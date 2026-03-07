@@ -143,6 +143,17 @@
     "clear_filters": "Clear {{filterCount}} selected"
   },
   "game_details": {
+    "local_saves_backup": "Local Saves Backup",
+    "local_saves_description": "Manage your game saves locally, protecting your progress even if the game is uninstalled.",
+    "backup_local_save": "Backup Save Locally",
+    "restore_local_save": "Restore Latest Backup",
+    "restore_local_save_success": "Save successfully restored!",
+    "restore_local_save_error": "Failed to restore save.",
+    "backup_local_save_success": "Save successfully backed up!",
+    "backup_local_save_error": "Failed to backup save.",
+    "auto_backup_local": "Auto-backup on game close",
+    "no_local_backup_found": "No local backups found for this game.",
+    "local_backup_date": "Latest Backup: {{date}}",
     "open_download_options": "Open download options",
     "download_options_zero": "No download option",
     "download_options_one": "{{count}} download option",

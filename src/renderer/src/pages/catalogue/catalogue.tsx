@@ -81,15 +81,17 @@ function Catalogue() {
           ),
         };
 
-        const response = await window.electron.hydraApi.post<{
+        const response = await window.electron.searchCatalogue<{
           edges: CatalogueSearchResult[];
           count: number;
-        }>("/catalogue/search", {
-          data: requestData,
-          needsAuth: false,
-        });
+          isCachedResult?: boolean;
+        }>(requestData);
 
         if (abortController.signal.aborted) return;
+
+        if (response.isCachedResult) {
+          console.log("[Leg3ndy] Serving catalogue from local cache fallback");
+        }
 
         setResults(response.edges);
         setItemsCount(response.count);

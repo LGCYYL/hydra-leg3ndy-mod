@@ -55,7 +55,16 @@ const getGameShopDetails = async (
 
         return null;
       }
-    );
+    ).catch((err) => {
+      logger.warn("Failed to fetch steam app details, relying on cache if available", err);
+      if (cachedData) {
+        return {
+          ...cachedData,
+          assets: cachedAssets ?? null,
+        };
+      }
+      return null;
+    });
 
     if (cachedData) {
       return {
