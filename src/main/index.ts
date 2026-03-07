@@ -18,15 +18,10 @@ import { GameShop, UserPreferences } from "@types";
 import { launchGame } from "./helpers";
 import { loadState } from "./main";
 
-// const { autoUpdater } = updater;
+import updater from "electron-updater";
 
-// autoUpdater.setFeedURL({
-//   provider: "github",
-//   owner: "hydralauncher",
-//   repo: "hydra",
-// });
-
-// autoUpdater.logger = logger;
+const { autoUpdater } = updater;
+autoUpdater.logger = logger;
 
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) app.quit();

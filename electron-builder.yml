@@ -67,9 +67,8 @@ appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
-  provider: generic
-  url: "http://localhost:9999/releases"
-  # owner: hydralauncher
-  # repo: hydra
+  provider: github
+  owner: LGCYYL
+  repo: hydra-leg3ndy-mod
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/
