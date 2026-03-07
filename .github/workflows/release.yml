@@ -11,6 +11,9 @@ on:
     branches:
       - 'release/**'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:

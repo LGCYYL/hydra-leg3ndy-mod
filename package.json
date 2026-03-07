@@ -1,6 +1,6 @@
 {
   "name": "leg3ndy-hydra",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Leg3ndy Hydra - Secure Game Launcher",
   "main": "./out/main/index.js",
   "author": "Leg3ndy Security Audit",
