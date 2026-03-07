@@ -56,9 +56,7 @@ linux:
     - from: binaries/aria2c
   target:
     - AppImage
-    - snap
     - deb
-    - rpm
   maintainer: electronjs.org
   category: Game
   mimeTypes:
