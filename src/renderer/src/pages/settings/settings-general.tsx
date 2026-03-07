@@ -13,13 +13,13 @@ import {
   SelectField,
 } from "@renderer/components";
 import { useTranslation } from "react-i18next";
-import { useAppSelector } from "@renderer/hooks";
+import { useAppSelector, useToast } from "@renderer/hooks";
 import { changeLanguage } from "i18next";
 import languageResources from "@locales";
 import { orderBy } from "lodash-es";
 import { settingsContext } from "@renderer/context";
 import "./settings-general.scss";
-import { DesktopDownloadIcon, UnmuteIcon } from "@primer/octicons-react";
+import { DesktopDownloadIcon, UnmuteIcon, SyncIcon } from "@primer/octicons-react";
 import { logger } from "@renderer/logger";
 import { AchievementCustomNotificationPosition } from "@types";
 
@@ -30,6 +30,12 @@ interface LanguageOption {
 
 export function SettingsGeneral() {
   const { t } = useTranslation("settings");
+  const { showSuccessToast } = useToast();
+
+  const handleCheckForUpdates = () => {
+    window.electron.checkForUpdates();
+    showSuccessToast(t("verifying_updates", "Buscando atualizações na nuvem..."));
+  };
 
   const { updateUserPreferences } = useContext(settingsContext);
 
@@ -234,6 +240,22 @@ export function SettingsGeneral() {
 
   return (
     <div className="settings-general">
+      <h2 className="settings-general__section-title">{t("updates", "Atualiza\u00e7\u00f5es")}</h2>
+
+      <p className="settings-general__common-redist-description">
+        {t("updates_description", "O Leg3ndy Hydra procura atualizações automaticamente em background. Caso haja uma nova versão disponível, ela aparecerá de forma destacada no topo do aplicativo.")}
+      </p>
+
+      <Button
+        onClick={handleCheckForUpdates}
+        className="settings-general__common-redist-button"
+      >
+        <SyncIcon />
+        {t("check_for_updates", "Verificar Novas Versões")}
+      </Button>
+
+      <h2 className="settings-general__section-title">{t("downloads_path", "Locais e Idiomas")}</h2>
+
       <TextField
         label={t("downloads_path")}
         value={form.downloadsPath}
