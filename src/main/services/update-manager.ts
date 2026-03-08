@@ -13,7 +13,7 @@ const ticksToUpdate = (50 * 60 * 1000) / MAIN_LOOP_INTERVAL; // 50 minutes
 export class UpdateManager {
   private static hasNotified = false;
   private static newVersion = "";
-  private static checkTick = 0;
+  private static checkTick = ticksToUpdate;
 
   private static mockValuesForDebug() {
     this.sendEvent({ type: "update-available", info: { version: "3.3.1" } });
