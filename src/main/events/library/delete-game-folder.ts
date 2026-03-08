@@ -1,6 +1,8 @@
 import path from "node:path";
 import fs from "node:fs";
 
+import { removeSymbolsFromName } from "@shared";
+import { SystemPath } from "@main/services/system-path";
 import { getDownloadsPath } from "../helpers/get-downloads-path";
 import { logger } from "@main/services";
 import { registerEvent } from "../register-event";
@@ -62,6 +64,22 @@ const deleteGameFolder = async (
       installerSizeInBytes: null,
       executablePath: null,
     });
+
+    const shortcutName = removeSymbolsFromName(game.title).trim() || game.objectId;
+
+    let desktopPath = SystemPath.getPath("desktop");
+    let startMenuPath = process.platform === "win32"
+      ? path.join(SystemPath.getPath("appData"), "Microsoft", "Windows", "Start Menu", "Programs")
+      : null;
+
+    if (desktopPath) {
+      await deleteFile(path.join(desktopPath, `${shortcutName}.lnk`));
+      await deleteFile(path.join(desktopPath, `${shortcutName}.url`));
+    }
+    if (startMenuPath) {
+      await deleteFile(path.join(startMenuPath, `${shortcutName}.lnk`));
+      await deleteFile(path.join(startMenuPath, `${shortcutName}.url`));
+    }
   }
 };
 
