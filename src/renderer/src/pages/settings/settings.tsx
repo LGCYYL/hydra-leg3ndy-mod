@@ -72,7 +72,7 @@ export default function Settings() {
       },
       {
         id: "backup" as const,
-        label: "Backup Direto",
+        label: t("backup_direct", { defaultValue: "Direct Backup" }),
         icon: <ServerIcon size={16} />,
       },
       ...(userDetails

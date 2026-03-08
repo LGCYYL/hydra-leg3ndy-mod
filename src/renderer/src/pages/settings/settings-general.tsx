@@ -34,7 +34,7 @@ export function SettingsGeneral() {
 
   const handleCheckForUpdates = () => {
     window.electron.checkForUpdates();
-    showSuccessToast(t("verifying_updates", "Buscando atualizações na nuvem..."));
+    showSuccessToast(t("verifying_updates"));
   };
 
   const { updateUserPreferences } = useContext(settingsContext);

@@ -1,4 +1,4 @@
-﻿{
+{
   "language_name": "Deutsch",
   "app": {
     "successfully_signed_in": "Erfolgreich angemeldet"
@@ -118,8 +118,8 @@
     "downloads": "Downloads",
     "search_results": "Suchergebnisse",
     "settings": "Einstellungen",
-    "version_available_install": "Version {{version}} verfügbar. Klicke hier, um neuzustarten und sie zu installieren.",
-    "version_available_download": "Version {{version}} verfügbar. Klicke hier, um sie herunterzuladen.",
+    "version_available_install": "Version {{version}} verfügbar. Klicken Sie hier, um neu zu starten und zu installieren.",
+    "version_available_download": "Version {{version}} verfügbar. Klicken Sie hier zum Herunterladen.",
     "search_library": "Search library",
     "recent_searches": "Recent Searches",
     "suggestions": "Suggestions",
@@ -241,6 +241,14 @@
     "downloads_section_description": "Sieh dir Updates oder andere Versionen dieses Spiels an",
     "danger_zone_section_title": "Gefahrenzone",
     "danger_zone_section_description": "Entferne dieses Spiel aus deiner Bibliothek oder die von Leg3ndy Hydra heruntergeladenen Dateien",
+    "cloud_sync_in_progress": "Cloud-Synchronisierung läuft...",
+    "local_saves_backup": "Lokale Speicherstand-Sicherung",
+    "local_saves_description": "Erstellen Sie ein Offline-Backup Ihres gesamten Fortschritts, um es später zu importieren.",
+    "backup_local_save": "Manuelles Backup erstellen",
+    "restore_local_save": "Backup wiederherstellen",
+    "no_local_backup_found": "Kein Backup auf der Festplatte gefunden.",
+    "auto_backup_local": "Beim Beenden des Spiels automatisch sichern",
+    "local_backup_date": "Letztes Backup: {{date}}",
     "download_in_progress": "Download erfolgt",
     "download_paused": "Download ist pausiert",
     "last_downloaded_option": "Letzte Download-Option",
@@ -433,7 +441,7 @@
     "settings_category_general_description": "Executable path, launch options, and shortcuts",
     "settings_category_assets": "Assets",
     "settings_category_assets_description": "Customize game title, icon, logo, and hero artwork",
-    "settings_category_hydra_cloud": "Hydra Cloud",
+    "settings_category_hydra_cloud": "Spielstände",
     "settings_category_hydra_cloud_description": "Configure cloud sync behavior for this game",
     "settings_category_compatibility": "Compatibility",
     "settings_category_compatibility_description": "Linux compatibility settings including Wine and Proton",
@@ -511,7 +519,14 @@
     "hide": "Hide",
     "create_steam_shortcut_modal_vr_flag": "VR Game (In Steam: update the VR flag or delete/recreate the shortcut)",
     "create_steam_shortcut_modal_create_button": "Create",
-    "create_steam_shortcut_modal_cancel_button": "Cancel"
+    "create_steam_shortcut_modal_cancel_button": "Cancel",
+    "backup_local_save_success": "Spielstand erfolgreich gesichert!",
+    "backup_local_save_error": "Fehler bei der Sicherung des Spielstands.",
+    "restore_local_save_success": "Spielstand erfolgreich wiederhergestellt!",
+    "restore_local_save_error": "Fehler bei der Wiederherstellung.",
+    "delete_local_save": "Sicherung löschen",
+    "delete_local_save_success": "Sicherung erfolgreich gelöscht!",
+    "delete_local_save_error": "Fehler beim Löschen der Sicherung."
   },
   "activation": {
     "title": "Leg3ndy Hydra aktivieren",
@@ -765,7 +780,32 @@
     "proton_version_auto": "Auto (global default or umu default)",
     "proton_source_umu_default": "umu default selection",
     "proton_source_steam": "Installed by Steam",
-    "proton_source_compatibility_tools": "Installed in Steam compatibilitytools.d"
+    "proton_source_compatibility_tools": "Installed in Steam compatibilitytools.d",
+    "backup_full_sync": "Vollständiges Backup (Lokal)",
+    "backup_full_sync_desc": "Übertragen Sie alle Ihre Leg3ndy Hydra-Daten (Spielstände, Einstellungen, Erfolge) lokal zwischen Computern.",
+    "backup_p2p_sync": "P2P-Synchronisierung (Wi-Fi/LAN)",
+    "backup_p2p_sync_desc": "Kopieren Sie alles direkt und sofort auf einen anderen verbundenen PC.",
+    "backup_host_pc": "Backup hosten (Dieser PC)",
+    "backup_host_disable": "Deaktivieren",
+    "backup_receive": "Backup empfangen (Verbinden)",
+    "backup_manual_export": "Manueller Export",
+    "backup_manual_export_desc": "Generieren Sie eine \".zip\"-Datei mit Ihren Daten für USB-Sticks oder Cloud.",
+    "backup_export_tar": "Backup exportieren",
+    "backup_restore_tar": "Backup wiederherstellen",
+    "backup_pairing_code": "Kopplungscode:",
+    "backup_pairing_code_help": "Geben Sie diesen Code auf dem anderen Computer ein.",
+    "backup_export_success": "Backup erfolgreich exportiert!",
+    "backup_import_confirm": "Dadurch werden ALLE Ihre aktuellen Daten ersetzt. Möchten Sie fortfahren?",
+    "backup_import_error": "Beim Wiederherstellen des Backups ist ein Fehler aufgetreten.",
+    "backup_host_error": "Ressourcen konnten nicht generiert werden.",
+    "backup_receive_prompt": "Geben Sie den Host-Kopplungscode ein:",
+    "backup_receive_confirm": "Dadurch werden ALLE Ihre Daten ersetzt. Möchten Sie fortfahren?",
+    "backup_receive_error": "Verbindung zum Host oder Wiederherstellung der Dateien fehlgeschlagen.",
+    "backup_direct": "Direktes Backup",
+    "updates": "Updates",
+    "updates_description": "Leg3ndy Hydra sucht im Hintergrund automatisch nach Updates. Wenn eine neue Version verfügbar ist, wird sie oben in der Anwendung hervorgehoben angezeigt.",
+    "check_for_updates": "Nach Updates suchen",
+    "verifying_updates": "Suchen nach Updates in der Cloud..."
   },
   "notifications": {
     "download_complete": "Download abgeschlossen",
@@ -936,8 +976,10 @@
     "achievement_earn_points": "Verdiene {{points}} Punkte mit diesem Erfolg",
     "earned_points": "Verdiente Punkte:",
     "available_points": "Verfügbare Punkte:",
-    "how_to_earn_achievements_points": "Wie verdient man Erfolgspunkte?",
-    "locked_achievement": "Gesperrte Errungenschaft"
+    "how_to_earn_achievements_points": "Wie schalte ich Erfolgspunkte frei?",
+    "locked_achievement": "Gesperrter Erfolg",
+    "points_explanation_1": "Erfolgspunkte erhalten Sie durch das Freischalten von Erfolgen in Spielen.",
+    "points_explanation_2": "Seltenere Erfolge sind mehr Punkte wert. Die Seltenheit wird berechnet."
   },
   "hydra_cloud": {
     "subscription_tour_title": "Leg3ndy Hydra Cloud-Abonnement",
@@ -1046,6 +1088,17 @@
     "failed_to_dismiss": "Failed to dismiss notification",
     "friend_request_accepted": "Friend request accepted",
     "friend_request_refused": "Friend request refused"
+  },
+  "about": {
+    "about_title": "Über",
+    "about_description": "Willkommen bei Leg3ndy Hydra. Die beste Spielvertriebssoftware für ein sauberes und sicheres Erlebnis.",
+    "feature_security_title": "Sicherheit Fokussiert",
+    "feature_security_desc": "Tracker-Entfernung, um sich 100% auf saubere Software zu konzentrieren.",
+    "feature_improvements_title": "Stabilitätsverbesserungen",
+    "feature_improvements_desc": "Leistungsoptimierungen für eine flüssige Oberfläche.",
+    "feature_updates_title": "Ständige Updates",
+    "feature_updates_desc": "Bleiben Sie mit automatischen Updates und schnellen Integrationen auf dem Laufenden.",
+    "disclaimer": "Leg3ndy Hydra protokolliert kein P2P.",
+    "all_rights_reserved": "Alle Rechte vorbehalten."
   }
 }
-

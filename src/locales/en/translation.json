@@ -283,6 +283,14 @@
     "downloads_section_description": "Check out updates or other versions of this game",
     "danger_zone_section_title": "Danger zone",
     "danger_zone_section_description": "Remove this game from your library or the files downloaded by Hydra",
+    "cloud_sync_in_progress": "Cloud sync in progress...",
+    "local_saves_backup": "Local Saves Backup",
+    "local_saves_description": "Create an offline backup of all progress for this game to import later.",
+    "backup_local_save": "Create Manual Backup",
+    "restore_local_save": "Restore Backup",
+    "no_local_backup_found": "No backup found on disk.",
+    "auto_backup_local": "Automatically backup when exiting the game",
+    "local_backup_date": "Last backup: {{date}}",
     "download_in_progress": "Download in progress",
     "download_paused": "Download paused",
     "extracting": "Extracting",
@@ -406,7 +414,7 @@
     "settings_category_general_description": "Executable path, launch options, and shortcuts",
     "settings_category_assets": "Assets",
     "settings_category_assets_description": "Customize game title, icon, logo, and hero artwork",
-    "settings_category_hydra_cloud": "Hydra Cloud",
+    "settings_category_hydra_cloud": "Saves",
     "settings_category_hydra_cloud_description": "Configure cloud sync behavior for this game",
     "settings_category_compatibility": "Compatibility",
     "settings_category_compatibility_description": "Linux compatibility settings including Wine and Proton",
@@ -520,7 +528,14 @@
     "hide_original": "Hide original",
     "review_from_blocked_user": "Review from blocked user",
     "show": "Show",
-    "hide": "Hide"
+    "hide": "Hide",
+    "backup_local_save_success": "Save backed up successfully!",
+    "backup_local_save_error": "Error backing up save.",
+    "restore_local_save_success": "Save restored successfully!",
+    "restore_local_save_error": "Error restoring save.",
+    "delete_local_save": "Delete Backup",
+    "delete_local_save_success": "Backup deleted successfully!",
+    "delete_local_save_error": "Error deleting backup."
   },
   "activation": {
     "title": "Activate Leg3ndy Hydra",
@@ -774,7 +789,32 @@
     "cannot_change_downloader_while_downloading": "Cannot change this setting while a download is in progress",
     "create_shortcuts_on_download": "Create desktop and Start Menu shortcuts when game finishes downloading",
     "default_proton_version": "Default Proton version",
-    "default_proton_version_description": "Select the Proton version used by Auto mode when a game has no custom override"
+    "default_proton_version_description": "Select the Proton version used by Auto mode when a game has no custom override",
+    "backup_full_sync": "Full Backup and Synchronization (Local)",
+    "backup_full_sync_desc": "Transfer all your Leg3ndy Hydra data (Game Saves, Settings, Playtime, and Achievements) between computers without relying on the cloud. Fully encrypted locally.",
+    "backup_p2p_sync": "P2P Synchronization (Local Wi-Fi/LAN)",
+    "backup_p2p_sync_desc": "Copy everything directly to another PC connected in your house instantly.",
+    "backup_host_pc": "Host Backup (This PC)",
+    "backup_host_disable": "Disable",
+    "backup_receive": "Receive Backup (Connect)",
+    "backup_manual_export": "Manual Export",
+    "backup_manual_export_desc": "Generate a \".zip\" file with all your data to store on a USB stick or cloud provider. The file might be large.",
+    "backup_export_tar": "Export Backup (.tar.gz)",
+    "backup_restore_tar": "Restore Backup (.tar.gz)",
+    "backup_pairing_code": "Pairing Code:",
+    "backup_pairing_code_help": "Enter this code on the other computer by clicking 'Receive Backup'.",
+    "backup_export_success": "Backup exported successfully!",
+    "backup_import_confirm": "This will replace ALL your current data and restart Leg3ndy Hydra. Do you wish to continue?",
+    "backup_import_error": "An error occurred while restoring the backup or the process was canceled.",
+    "backup_host_error": "Could not generate files to send, your profile might be empty.",
+    "backup_receive_prompt": "Enter the Host Pairing Code (IP:Port):",
+    "backup_receive_confirm": "This will replace ALL your data via the Host. Do you wish to continue?",
+    "backup_receive_error": "Failed to connect to Host or restore files.",
+    "backup_direct": "Direct Backup",
+    "updates": "Updates",
+    "updates_description": "Leg3ndy Hydra automatically searches for updates in the background. If a new version is available, it will be highlighted prominently at the top of the application.",
+    "check_for_updates": "Check for Updates",
+    "verifying_updates": "Searching for updates in the cloud..."
   },
   "notifications": {
     "download_complete": "Download complete",
@@ -989,7 +1029,10 @@
     "achievement_earn_points": "Earn {{points}} points with this achievement",
     "earned_points": "Earned points:",
     "available_points": "Available points:",
-    "how_to_earn_achievements_points": "How to earn achievements points?"
+    "how_to_earn_achievements_points": "How to unlock achievement points?",
+    "locked_achievement": "Locked achievement",
+    "points_explanation_1": "Achievement points are earned by unlocking achievements in games.",
+    "points_explanation_2": "Harder and rarer achievements are worth more points. Rarity is calculated based on the percentage of players who have unlocked each achievement."
   },
   "hydra_cloud": {
     "subscription_tour_title": "Hydra Cloud Subscription",
@@ -1054,5 +1097,17 @@
     "failed_to_dismiss": "Failed to dismiss notification",
     "friend_request_accepted": "Friend request accepted",
     "friend_request_refused": "Friend request refused"
+  },
+  "about": {
+    "about_title": "About",
+    "about_description": "Welcome to Leg3ndy Hydra. The premiere game distribution software focused on a clean, secure player experience.",
+    "feature_security_title": "Security Focused",
+    "feature_security_desc": "Tracker removal to focus 100% on a clean software focused on user freedom.",
+    "feature_improvements_title": "Stability Improvements",
+    "feature_improvements_desc": "Performance optimizations to deliver a fluid interface.",
+    "feature_updates_title": "Constant Updates",
+    "feature_updates_desc": "Stay up to date with automatic updates and fast integrations.",
+    "disclaimer": "Leg3ndy Hydra has no affiliation against violations of improper use and does not log P2P.",
+    "all_rights_reserved": "All rights reserved."
   }
 }

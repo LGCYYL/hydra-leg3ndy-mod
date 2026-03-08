@@ -87,6 +87,7 @@ export function GameOptionsModal({
 
   const [isBackingUpLocal, setIsBackingUpLocal] = useState(false);
   const [isRestoringLocal, setIsRestoringLocal] = useState(false);
+  const [isDeletingLocal, setIsDeletingLocal] = useState(false);
   const [autoBackupLocal, setAutoBackupLocal] = useState(game.automaticCloudSync ?? false);
   const [saveFolderPath] = useState<string | null>(null);
   const [loadingSaveFolder] = useState(false);
@@ -641,6 +642,24 @@ export function GameOptionsModal({
     }
   };
 
+  const handleDeleteLocalSave = async () => {
+    if (!game.localSaveArtifacts?.length) return;
+
+    // For simplicity, just delete the most recent one
+    const artifact = game.localSaveArtifacts[game.localSaveArtifacts.length - 1];
+
+    try {
+      setIsDeletingLocal(true);
+      await window.electron.deleteLocalBackup(game.objectId, game.shop, artifact.id);
+      showSuccessToast(t("delete_local_save_success"));
+      updateGame();
+    } catch (err) {
+      showErrorToast(t("delete_local_save_error"));
+    } finally {
+      setIsDeletingLocal(false);
+    }
+  };
+
   const handleToggleAutoBackup = async () => {
     const newValue = !autoBackupLocal;
     setAutoBackupLocal(newValue);
@@ -772,6 +791,14 @@ export function GameOptionsModal({
                     disabled={isRestoringLocal || !game.localSaveArtifacts?.length}
                   >
                     {t("restore_local_save")}
+                  </Button>
+
+                  <Button
+                    onClick={handleDeleteLocalSave}
+                    theme="outline"
+                    disabled={isDeletingLocal || !game.localSaveArtifacts?.length}
+                  >
+                    {t("delete_local_save")}
                   </Button>
                 </div>
 

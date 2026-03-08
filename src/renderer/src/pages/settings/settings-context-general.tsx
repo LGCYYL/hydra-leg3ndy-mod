@@ -37,7 +37,7 @@ export function SettingsContextGeneral({
 
   const handleCheckForUpdates = () => {
     window.electron.checkForUpdates();
-    showSuccessToast(t("verifying_updates", "Buscando atualizações na nuvem..."));
+    showSuccessToast(t("verifying_updates"));
   };
 
   const userPreferences = useAppSelector(
@@ -130,13 +130,13 @@ export function SettingsContextGeneral({
   return (
     <div className="settings-context-panel">
       <div className="settings-context-panel__group">
-        <h3>{t("updates", "Atualizações")}</h3>
+        <h3>{t("updates")}</h3>
         <p style={{ margin: "4px 0 16px 0", color: "#A0A0A0", fontSize: "14px", lineHeight: "1.5" }}>
-          {t("updates_description", "O Leg3ndy Hydra procura atualizações automaticamente em background. Caso haja uma nova versão disponível, ela aparecerá de forma destacada no topo do aplicativo.")}
+          {t("updates_description")}
         </p>
         <Button onClick={handleCheckForUpdates} theme="outline" style={{ width: "fit-content", display: "flex", gap: "8px", alignItems: "center" }}>
           <SyncIcon />
-          {t("check_for_updates", "Verificar Novas Versões")}
+          {t("check_for_updates")}
         </Button>
       </div>
 

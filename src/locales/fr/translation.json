@@ -1,4 +1,4 @@
-﻿{
+{
   "language_name": "Français",
   "app": {
     "successfully_signed_in": "Connecté avec succès"
@@ -241,6 +241,14 @@
     "downloads_section_description": "Découvrez les mises à jour ou autres versions de ce jeu",
     "danger_zone_section_title": "Zone de danger",
     "danger_zone_section_description": "Supprimez ce jeu de votre bibliothèque ou les fichiers téléchargés par Leg3ndy Hydra",
+    "cloud_sync_in_progress": "Synchronisation en cours...",
+    "local_saves_backup": "Sauvegarde Locale des Données",
+    "local_saves_description": "Créez une sauvegarde hors ligne de toute votre progression pour ce jeu.",
+    "backup_local_save": "Créer une Sauvegarde",
+    "restore_local_save": "Restaurer la Sauvegarde",
+    "no_local_backup_found": "Aucune sauvegarde trouvée sur le disque.",
+    "auto_backup_local": "Sauvegarder automatiquement en quittant le jeu",
+    "local_backup_date": "Dernière sauvegarde : {{date}}",
     "download_in_progress": "Téléchargement en cours",
     "download_paused": "Téléchargement en pause",
     "last_downloaded_option": "Dernière option téléchargée",
@@ -483,7 +491,7 @@
     "settings_category_general_description": "Chemin de l’exécutable, options de lancement et raccourcis",
     "settings_category_assets": "Ressources",
     "settings_category_assets_description": "Personnaliser le titre du jeu, l’icône, le logo et l’image principale",
-    "settings_category_hydra_cloud": "Hydra Cloud",
+    "settings_category_hydra_cloud": "Sauvegardes",
     "settings_category_hydra_cloud_description": "Configurer le comportement de synchronisation cloud pour ce jeu",
     "settings_category_compatibility": "Compatibilité",
     "settings_category_compatibility_description": "Paramètres de compatibilité Linux incluant Wine et Proton",
@@ -511,7 +519,14 @@
     "protondb_tier_gold": "Gold",
     "protondb_tier_platinum": "Platinum",
     "protondb_tier_unknown": "Unknown",
-    "protondb_badge_title": "ProtonDB {{tier}}"
+    "protondb_badge_title": "ProtonDB {{tier}}",
+    "backup_local_save_success": "Sauvegarde effectuée avec succès !",
+    "backup_local_save_error": "Erreur lors de la sauvegarde.",
+    "restore_local_save_success": "Sauvegarde restaurée avec succès !",
+    "restore_local_save_error": "Erreur lors de la restauration.",
+    "delete_local_save": "Supprimer la Sauvegarde",
+    "delete_local_save_success": "Sauvegarde supprimée avec succès !",
+    "delete_local_save_error": "Erreur lors de la suppression de la sauvegarde."
   },
   "activation": {
     "title": "Activer Leg3ndy Hydra",
@@ -765,7 +780,32 @@
     "achievement_notifications": "Achievement notifications",
     "debrid_services": "Debrid services",
     "content_preferences": "Content preferences",
-    "gameplay_metadata": "Gameplay metadata"
+    "gameplay_metadata": "Gameplay metadata",
+    "backup_full_sync": "Sauvegarde Complète (Locale)",
+    "backup_full_sync_desc": "Transférez toutes vos données Leg3ndy Hydra (Sauvegardes, Paramètres et Succès) d'un ordinateur à l'autre sans cloud.",
+    "backup_p2p_sync": "Synchronisation P2P (Wi-Fi/Réseau local)",
+    "backup_p2p_sync_desc": "Copiez instantanément tout directement vers un autre PC connecté chez vous.",
+    "backup_host_pc": "Héberger la Sauvegarde (Ce PC)",
+    "backup_host_disable": "Désactiver",
+    "backup_receive": "Recevoir la Sauvegarde (Se connecter)",
+    "backup_manual_export": "Exportation Manuelle",
+    "backup_manual_export_desc": "Générez un fichier \".zip\" de toutes vos données pour les archiver sur une clé USB.",
+    "backup_export_tar": "Exporter la Sauvegarde",
+    "backup_restore_tar": "Restaurer la Sauvegarde",
+    "backup_pairing_code": "Code de Couplage :",
+    "backup_pairing_code_help": "Saisissez ce code sur l'autre ordinateur.",
+    "backup_export_success": "Sauvegarde exportée avec succès !",
+    "backup_import_confirm": "Cela remplacera TOUTES vos données actuelles. Voulez-vous continuer ?",
+    "backup_import_error": "Une erreur est survenue lors de la restauration.",
+    "backup_host_error": "Impossible de générer les fichiers à envoyer.",
+    "backup_receive_prompt": "Entrez le Code de Couplage de l'Hôte :",
+    "backup_receive_confirm": "Cela remplacera TOUTES vos données. Voulez-vous continuer ?",
+    "backup_receive_error": "Échec de la connexion ou de la restauration des fichiers.",
+    "backup_direct": "Sauvegarde Directe",
+    "updates": "Mises à jour",
+    "updates_description": "Leg3ndy Hydra recherche automatiquement des mises à jour en arrière-plan. Si une nouvelle version est disponible, elle sera mise en évidence en haut de l'application.",
+    "check_for_updates": "Vérifier les Mises à Jour",
+    "verifying_updates": "Recherche de mises à jour dans le cloud..."
   },
   "notifications": {
     "download_complete": "Téléchargement terminé",
@@ -938,8 +978,10 @@
     "achievement_earn_points": "Gagnez {{points}} points avec ce succès",
     "earned_points": "Points gagnés :",
     "available_points": "Points disponibles :",
-    "how_to_earn_achievements_points": "Comment gagner des points de succès ?",
-    "locked_achievement": "Succès verrouillé"
+    "how_to_earn_achievements_points": "Comment débloquer des points de succès ?",
+    "locked_achievement": "Succès verrouillé",
+    "points_explanation_1": "Les points de succès sont gagnés en débloquant des succès dans les jeux.",
+    "points_explanation_2": "Les succès les plus difficiles et les plus rares valent plus de points. La rareté est calculée."
   },
   "hydra_cloud": {
     "subscription_tour_title": "Abonnement Leg3ndy Hydra Cloud",
@@ -1048,6 +1090,17 @@
     "preflight_downloading": "Téléchargement des dépendances",
     "preflight_installing": "Installation des dépendances",
     "preflight_installing_detail": "{{detail}}"
+  },
+  "about": {
+    "about_title": "À propos",
+    "about_description": "Bienvenue sur Leg3ndy Hydra. Le premier logiciel de distribution de jeux axé sur une expérience propre et sécurisée.",
+    "feature_security_title": "Axé sur la Sécurité",
+    "feature_security_desc": "Suppression des traqueurs pour se concentrer à 100 % sur un logiciel propre.",
+    "feature_improvements_title": "Améliorations de Stabilité",
+    "feature_improvements_desc": "Optimisations des performances pour offrir une interface fluide.",
+    "feature_updates_title": "Mises à jour Constantes",
+    "feature_updates_desc": "Restez à jour avec des mises à jour automatiques et des intégrations rapides.",
+    "disclaimer": "Leg3ndy Hydra n'enregistre pas le P2P.",
+    "all_rights_reserved": "Tous droits réservés."
   }
 }
-
