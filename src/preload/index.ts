@@ -17,8 +17,11 @@ import type {
   FriendRequestSync,
   NotificationSync,
   ShortcutLocation,
+  CreateSteamShortcutOptions,
   AchievementCustomNotificationPosition,
   AchievementNotificationInfo,
+  ProtonVersion,
+  TorrentFilesResponse,
 } from "@types";
 import type { AuthPage } from "@shared";
 import type { AxiosProgressEvent } from "axios";
@@ -73,6 +76,10 @@ contextBridge.exposeInMainWorld("electron", {
   },
   checkDebridAvailability: (magnets: string[]) =>
     ipcRenderer.invoke("checkDebridAvailability", magnets),
+  getTorrentFiles: (magnet: string) =>
+    ipcRenderer.invoke("getTorrentFiles", magnet) as Promise<
+      { ok: true; data: TorrentFilesResponse } | { ok: false; error: string }
+    >,
 
   /* Catalogue */
   getGameShopDetails: (objectId: string, shop: GameShop, language: string) =>
@@ -105,8 +112,20 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("updateUserPreferences", preferences),
   autoLaunch: (autoLaunchProps: { enabled: boolean; minimized: boolean }) =>
     ipcRenderer.invoke("autoLaunch", autoLaunchProps),
+
+  /* Backup */
+  exportBackup: () => ipcRenderer.invoke("exportBackup"),
+  importBackup: () => ipcRenderer.invoke("importBackup"),
+  hostBackup: () => ipcRenderer.invoke("hostBackup"),
+  stopHostBackup: () => ipcRenderer.invoke("stopHostBackup"),
+  receiveBackup: (hostAddress: string) => ipcRenderer.invoke("receiveBackup", hostAddress),
+
   authenticateRealDebrid: (apiToken: string) =>
     ipcRenderer.invoke("authenticateRealDebrid", apiToken),
+  authenticatePremiumize: (apiToken: string) =>
+    ipcRenderer.invoke("authenticatePremiumize", apiToken),
+  authenticateAllDebrid: (apiToken: string) =>
+    ipcRenderer.invoke("authenticateAllDebrid", apiToken),
   authenticateTorBox: (apiToken: string) =>
     ipcRenderer.invoke("authenticateTorBox", apiToken),
 
@@ -134,6 +153,21 @@ contextBridge.exposeInMainWorld("electron", {
       objectId,
       automaticCloudSync
     ),
+  toggleGameMangohud: (
+    shop: GameShop,
+    objectId: string,
+    autoRunMangohud: boolean
+  ) =>
+    ipcRenderer.invoke("toggleGameMangohud", shop, objectId, autoRunMangohud),
+  toggleGameGamemode: (
+    shop: GameShop,
+    objectId: string,
+    autoRunGamemode: boolean
+  ) =>
+    ipcRenderer.invoke("toggleGameGamemode", shop, objectId, autoRunGamemode),
+  isGamemodeAvailable: () => ipcRenderer.invoke("isGamemodeAvailable"),
+  isMangohudAvailable: () => ipcRenderer.invoke("isMangohudAvailable"),
+  isWinetricksAvailable: () => ipcRenderer.invoke("isWinetricksAvailable"),
   addGameToLibrary: (shop: GameShop, objectId: string, title: string) =>
     ipcRenderer.invoke("addGameToLibrary", shop, objectId, title),
   addCustomGameToLibrary: (
@@ -197,6 +231,12 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("addGameToFavorites", shop, objectId),
   removeGameFromFavorites: (shop: GameShop, objectId: string) =>
     ipcRenderer.invoke("removeGameFromFavorites", shop, objectId),
+  assignGameToCollection: (
+    shop: GameShop,
+    objectId: string,
+    collectionIds: string[]
+  ) =>
+    ipcRenderer.invoke("assignGameToCollection", shop, objectId, collectionIds),
   clearNewDownloadOptions: (shop: GameShop, objectId: string) =>
     ipcRenderer.invoke("clearNewDownloadOptions", shop, objectId),
   toggleGamePin: (shop: GameShop, objectId: string, pinned: boolean) =>
@@ -213,6 +253,17 @@ contextBridge.exposeInMainWorld("electron", {
     winePrefixPath: string | null
   ) =>
     ipcRenderer.invoke("selectGameWinePrefix", shop, objectId, winePrefixPath),
+  selectGameProtonPath: (
+    shop: GameShop,
+    objectId: string,
+    protonPath: string | null
+  ) => ipcRenderer.invoke("selectGameProtonPath", shop, objectId, protonPath),
+  getInstalledProtonVersions: () =>
+    ipcRenderer.invoke("getInstalledProtonVersions") as Promise<
+      ProtonVersion[]
+    >,
+  getGameLaunchProtonVersion: (shop: GameShop, objectId: string) =>
+    ipcRenderer.invoke("getGameLaunchProtonVersion", shop, objectId),
   verifyExecutablePathInUse: (executablePath: string) =>
     ipcRenderer.invoke("verifyExecutablePathInUse", executablePath),
   getLibrary: () => ipcRenderer.invoke("getLibrary"),
@@ -223,6 +274,8 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("getGameInstallerActionType", shop, objectId),
   openGameInstallerPath: (shop: GameShop, objectId: string) =>
     ipcRenderer.invoke("openGameInstallerPath", shop, objectId),
+  openGameWinetricks: (shop: GameShop, objectId: string) =>
+    ipcRenderer.invoke("openGameWinetricks", shop, objectId),
   openGameExecutablePath: (shop: GameShop, objectId: string) =>
     ipcRenderer.invoke("openGameExecutablePath", shop, objectId),
   getGameSaveFolder: (shop: GameShop, objectId: string) =>
@@ -264,8 +317,11 @@ contextBridge.exposeInMainWorld("electron", {
   scanInstalledGames: () => ipcRenderer.invoke("scanInstalledGames"),
   getDefaultWinePrefixSelectionPath: () =>
     ipcRenderer.invoke("getDefaultWinePrefixSelectionPath"),
-  createSteamShortcut: (shop: GameShop, objectId: string) =>
-    ipcRenderer.invoke("createSteamShortcut", shop, objectId),
+  createSteamShortcut: (
+    shop: GameShop,
+    objectId: string,
+    options?: CreateSteamShortcutOptions
+  ) => ipcRenderer.invoke("createSteamShortcut", shop, objectId, options),
   scanForExecutable: (shop: GameShop, objectId: string) =>
     ipcRenderer.invoke("scanForExecutable", shop, objectId),
   checkFileExists: (filePath: string) =>
@@ -306,6 +362,15 @@ contextBridge.exposeInMainWorld("electron", {
     ) => cb(shop, objectId, progress);
     ipcRenderer.on("on-extraction-progress", listener);
     return () => ipcRenderer.removeListener("on-extraction-progress", listener);
+  },
+  onExtractionFailed: (cb: (shop: GameShop, objectId: string) => void) => {
+    const listener = (
+      _event: Electron.IpcRendererEvent,
+      shop: GameShop,
+      objectId: string
+    ) => cb(shop, objectId);
+    ipcRenderer.on("on-extraction-failed", listener);
+    return () => ipcRenderer.removeListener("on-extraction-failed", listener);
   },
   onArchiveDeletionPrompt: (cb: (archivePaths: string[]) => void) => {
     const listener = (
@@ -435,6 +500,8 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("showOpenDialog", options),
   showItemInFolder: (path: string) =>
     ipcRenderer.invoke("showItemInFolder", path),
+  getImageDataUrl: (imageUrl: string) =>
+    ipcRenderer.invoke("getImageDataUrl", imageUrl),
   hydraApi: {
     get: (
       url: string,

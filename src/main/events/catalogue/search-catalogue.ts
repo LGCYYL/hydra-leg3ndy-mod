@@ -14,8 +14,7 @@ export const searchCatalogue = async (
         .digest("hex");
 
     try {
-        const response = await HydraApi.post("/catalogue/search", {
-            data,
+        const response = await HydraApi.post("/catalogue/search", data, {
             needsAuth: false,
         });
 

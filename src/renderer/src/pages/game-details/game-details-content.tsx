@@ -7,7 +7,6 @@ import { HeroPanel } from "./hero";
 import { DescriptionHeader } from "./description-header/description-header";
 import { GallerySlider } from "./gallery-slider/gallery-slider";
 import { Sidebar } from "./sidebar/sidebar";
-import { EditGameModal } from "./modals";
 import { GameReviews } from "./game-reviews";
 import { GameLogo } from "./game-logo";
 
@@ -64,14 +63,15 @@ export function GameDetailsContent() {
     shopDetails,
     game,
     hasNSFWContentBlocked,
-    updateGame,
     shop,
+    setShowGameOptionsModal,
+    setGameOptionsInitialCategory,
   } = useContext(gameDetailsContext);
 
   // const { showHydraCloudModal } = useSubscription();
 
   // const { userDetails, hasActiveSubscription } = useUserDetails();
-  const { updateLibrary, library } = useLibrary();
+  const { library } = useLibrary();
 
   const { /* setShowCloudSyncModal, */ getGameArtifacts } =
     useContext(cloudSyncContext);
@@ -97,7 +97,6 @@ export function GameDetailsContent() {
   }, [shopDetails, t, game?.shop]);
 
   const [backdropOpacity, setBackdropOpacity] = useState(1);
-  const [showEditGameModal, setShowEditGameModal] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [hasUserReviewed, setHasUserReviewed] = useState(false);
 
@@ -120,20 +119,17 @@ export function GameDetailsContent() {
     }
 
     if (!hasActiveSubscription) {
-      showHydraCloudModal("backup");
+      setGameOptionsInitialCategory("hydra_cloud");
+      setShowGameOptionsModal(true);
       return;
     }
 
-    setShowCloudSyncModal(true);
+    // setShowCloudSyncModal(true);
   }; */
 
   const handleEditGameClick = () => {
-    setShowEditGameModal(true);
-  };
-
-  const handleGameUpdated = () => {
-    updateGame();
-    updateLibrary();
+    setGameOptionsInitialCategory("assets");
+    setShowGameOptionsModal(true);
   };
 
   useEffect(() => {
@@ -199,7 +195,7 @@ export function GameDetailsContent() {
                     <div className="game-details__cloud-icon-container">
                       <img
                         src={cloudIconAnimated}
-                        alt="Cloud icon"
+                        alt=""
                         className="game-details__cloud-icon"
                       />
                     </div>
@@ -258,16 +254,6 @@ export function GameDetailsContent() {
           {shop !== "custom" && <Sidebar />}
         </div>
       </section>
-
-      {game && (
-        <EditGameModal
-          visible={showEditGameModal}
-          onClose={() => setShowEditGameModal(false)}
-          game={game}
-          shopDetails={shopDetails}
-          onGameUpdated={handleGameUpdated}
-        />
-      )}
     </div>
   );
 }

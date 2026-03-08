@@ -5,7 +5,7 @@ import type {
 } from "@types";
 
 import { useAppDispatch, useAppSelector, useFormat } from "@renderer/hooks";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 import "./catalogue.scss";
 
@@ -18,6 +18,19 @@ import { useCatalogue } from "@renderer/hooks/use-catalogue";
 import { GameItem } from "./game-item";
 import { FilterItem } from "./filter-item";
 import { debounce } from "lodash-es";
+import { Button } from "@renderer/components/button/button";
+
+const ProtonCompatibilitySection = lazy(async () => {
+  const mod = await import("./proton-compatibility-section");
+  return { default: mod.ProtonCompatibilitySection };
+});
+
+type CompatibilityThreshold<Value extends string> = {
+  value: string;
+  labelKey: string;
+  values: Value[];
+  color?: string;
+};
 
 const filterCategoryColors = {
   genres: "hsl(262deg 50% 47%)",
@@ -25,11 +38,50 @@ const filterCategoryColors = {
   downloadSourceFingerprints: "hsl(27deg 50% 40%)",
   developers: "hsl(340deg 50% 46%)",
   publishers: "hsl(200deg 50% 30%)",
+  protondbSupportBadges: "#F50057",
+  deckCompatibility: "#F50057",
 };
 
 const PAGE_SIZE = 20;
 
 import { ErrorBoundary } from "@renderer/components/error-boundary/error-boundary";
+
+const clearAllCategoryFilters = {
+  genres: [],
+  tags: [],
+  downloadSourceFingerprints: [],
+  developers: [],
+  publishers: [],
+  protondbSupportBadges: [],
+  deckCompatibility: [],
+};
+
+const protonCompatibilityThresholds: CompatibilityThreshold<
+  CatalogueSearchPayload["protondbSupportBadges"][number]
+>[] = [
+    {
+      value: "silver_plus",
+      labelKey: "protondb_silver_plus",
+      values: ["silver", "gold", "platinum"],
+      color: "rgb(166, 166, 166)",
+    },
+    {
+      value: "gold_plus",
+      labelKey: "protondb_gold_plus",
+      values: ["gold", "platinum"],
+      color: "rgb(207, 181, 59)",
+    },
+    {
+      value: "platinum_only",
+      labelKey: "protondb_platinum_only",
+      values: ["platinum"],
+      color: "rgb(180, 199, 220)",
+    },
+  ];
+
+const areSameValues = (first: string[], second: string[]) =>
+  first.length === second.length &&
+  first.every((item) => second.includes(item));
 
 export default function CatalogueWrapper() {
   return (
@@ -60,6 +112,7 @@ function Catalogue() {
   const dispatch = useAppDispatch();
 
   const { t, i18n } = useTranslation("catalogue");
+  const shouldShowProtonFeatures = window.electron.platform === "linux";
 
   const debouncedSearch = useRef(
     debounce(
@@ -155,11 +208,20 @@ function Catalogue() {
   }, [steamUserTags, filters.tags, language]);
 
   const groupedFilters = useMemo(() => {
+    const protonThreshold = protonCompatibilityThresholds.find((threshold) =>
+      areSameValues(threshold.values, filters.protondbSupportBadges)
+    );
+    const deckCompatible = areSameValues(filters.deckCompatibility, [
+      "playable",
+      "verified",
+    ]);
+
     return [
       ...filters.genres.map((genre) => ({
         label: Object.keys(steamGenresMapping).find(
           (key) => steamGenresMapping[key] === genre
         ) as string,
+        filterType: t("genres"),
         orbColor: filterCategoryColors.genres,
         key: "genres",
         value: genre,
@@ -169,6 +231,7 @@ function Catalogue() {
         label: Object.keys(steamUserTags[language]).find(
           (key) => steamUserTags[language][key] === tag
         ),
+        filterType: t("tags"),
         orbColor: filterCategoryColors.tags,
         key: "tags",
         value: tag,
@@ -178,6 +241,7 @@ function Catalogue() {
         label: downloadSources.find(
           (source) => source.fingerprint === fingerprint
         )?.name as string,
+        filterType: t("download_sources"),
         orbColor: filterCategoryColors.downloadSourceFingerprints,
         key: "downloadSourceFingerprints",
         value: fingerprint,
@@ -185,6 +249,7 @@ function Catalogue() {
 
       ...filters.developers.map((developer) => ({
         label: developer,
+        filterType: t("developers"),
         orbColor: filterCategoryColors.developers,
         key: "developers",
         value: developer,
@@ -192,12 +257,47 @@ function Catalogue() {
 
       ...filters.publishers.map((publisher) => ({
         label: decodeHTML(publisher),
+        filterType: t("publishers"),
         orbColor: filterCategoryColors.publishers,
         key: "publishers",
         value: publisher,
       })),
+
+      ...(shouldShowProtonFeatures &&
+        protonThreshold &&
+        protonThreshold.values.length
+        ? [
+          {
+            label: t(protonThreshold.labelKey),
+            filterType: t("protondb"),
+            orbColor: filterCategoryColors.protondbSupportBadges,
+            key: "protondbSupportBadges",
+            value: "threshold",
+          },
+        ]
+        : []),
+
+      ...(shouldShowProtonFeatures && deckCompatible
+        ? [
+          {
+            label: t("steam_deck_compatible"),
+            filterType: t("steam_deck_minimum"),
+            orbColor: filterCategoryColors.deckCompatibility,
+            key: "deckCompatibility",
+            value: "threshold",
+          },
+        ]
+        : []),
     ];
-  }, [filters, steamUserTags, downloadSources, steamGenresMapping, language]);
+  }, [
+    filters,
+    steamUserTags,
+    downloadSources,
+    steamGenresMapping,
+    language,
+    shouldShowProtonFeatures,
+    t,
+  ]);
 
   const filterSections = useMemo(() => {
     return [
@@ -255,6 +355,17 @@ function Catalogue() {
     t,
   ]);
 
+  const selectedFiltersCount = groupedFilters.length;
+
+  const protonThresholdValue =
+    protonCompatibilityThresholds.find((threshold) =>
+      areSameValues(threshold.values, filters.protondbSupportBadges)
+    )?.value ?? "";
+  const isDeckCompatible = areSameValues(filters.deckCompatibility, [
+    "playable",
+    "verified",
+  ]);
+
   return (
     <div className="catalogue" ref={cataloguePageRef}>
       <div className="catalogue__header">
@@ -264,8 +375,14 @@ function Catalogue() {
               <li key={`${filter.key}-${filter.value}`}>
                 <FilterItem
                   filter={filter.label ?? ""}
+                  filterType={filter.filterType}
                   orbColor={filter.orbColor}
                   onRemove={() => {
+                    if (filter.value === "threshold") {
+                      dispatch(setFilters({ [filter.key]: [] }));
+                      return;
+                    }
+
                     dispatch(
                       setFilters({
                         [filter.key]: filters[filter.key].filter(
@@ -279,6 +396,19 @@ function Catalogue() {
             ))}
           </ul>
         </div>
+
+        {selectedFiltersCount > 0 && (
+          <Button
+            type="button"
+            theme="outline"
+            className="catalogue__clear-all-button"
+            onClick={() => dispatch(setFilters(clearAllCategoryFilters))}
+          >
+            {t("clear_filters", {
+              filterCount: formatNumber(selectedFiltersCount),
+            })}
+          </Button>
+        )}
       </div>
 
       <div className="catalogue__content">
@@ -315,6 +445,49 @@ function Catalogue() {
 
         <div className="catalogue__filters-container">
           <div className="catalogue__filters-sections">
+            {shouldShowProtonFeatures && (
+              <Suspense fallback={null}>
+                <ProtonCompatibilitySection
+                  title={t("protondb")}
+                  protonSliderLabel={t("protondb_minimum")}
+                  deckSliderLabel={t("steam_deck_minimum")}
+                  protonOptions={protonCompatibilityThresholds.map(
+                    (threshold) => ({
+                      value: threshold.value,
+                      label: t(threshold.labelKey),
+                      color: threshold.color,
+                    })
+                  )}
+                  protonValue={protonThresholdValue}
+                  deckChecked={isDeckCompatible}
+                  deckLabel={t("steam_deck_compatible")}
+                  color={filterCategoryColors.protondbSupportBadges}
+                  onProtonChange={(value) => {
+                    const nextThreshold = protonCompatibilityThresholds.find(
+                      (threshold) => threshold.value === value
+                    );
+
+                    dispatch(
+                      setFilters({
+                        protondbSupportBadges: nextThreshold
+                          ? [...nextThreshold.values]
+                          : [],
+                      })
+                    );
+                  }}
+                  onDeckChange={(checked) => {
+                    dispatch(
+                      setFilters({
+                        deckCompatibility: checked
+                          ? ["playable", "verified"]
+                          : [],
+                      })
+                    );
+                  }}
+                />
+              </Suspense>
+            )}
+
             {filterSections.map((section) => (
               <FilterSection
                 key={section.key}
@@ -332,6 +505,8 @@ function Catalogue() {
                           | "downloadSourceFingerprints"
                           | "developers"
                           | "publishers"
+                          | "protondbSupportBadges"
+                          | "deckCompatibility"
                         ].filter((item) => item !== value),
                       })
                     );

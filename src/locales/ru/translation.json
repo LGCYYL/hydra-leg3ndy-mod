@@ -1,4 +1,4 @@
-﻿{
+{
   "language_name": "Русский",
   "app": {
     "successfully_signed_in": "Успешный вход"
@@ -129,7 +129,9 @@
     "extracting": "Распаковка {{title}}… ({{percentage}} завершено)",
     "installing_common_redist": "{{log}}…",
     "installation_complete": "Установка завершена",
-    "installation_complete_message": "Библиотеки успешно установлены"
+    "installation_complete_message": "Библиотеки успешно установлены",
+    "downloading_batch": "Downloading {{title}}… ({{percentage}} complete {{filesDownloaded}}/{{filesTotal}} files) - Completion {{eta}} - {{speed}}",
+    "calculating_eta_batch": "Downloading {{title}}… ({{percentage}} complete {{filesDownloaded}}/{{filesTotal}} files) - Calculating remaining time…"
   },
   "catalogue": {
     "search": "Фильтр…",
@@ -196,6 +198,16 @@
     "open_screenshot": "Открыть скриншот {{number}}",
     "download_settings": "Параметры загрузки",
     "downloader": "Загрузчик",
+    "torrent_files": "Файлы торрента",
+    "torrent_name_column": "Название",
+    "torrent_size_column": "Размер",
+    "torrent_downloading_column": "Загрузка",
+    "select_files_to_download": "Выберите файлы для загрузки",
+    "loading_torrent_files": "Загрузка файлов торрента...",
+    "search_torrent_files": "Поиск файлов",
+    "selected_files": "Выбранные файлы",
+    "select_all_files": "Выбрать все",
+    "retry_fetch_torrent_files": "Повторить",
     "downloader_online": "Онлайн",
     "downloader_not_configured": "Доступен, но не настроен",
     "downloader_offline": "Ссылка недоступна",
@@ -218,7 +230,7 @@
     "downloads_section_title": "Загрузки",
     "downloads_section_description": "Проверить наличие обновлений или других версий игры",
     "danger_zone_section_title": "Опасная зона",
-    "danger_zone_section_description": "Вы можете удалить эту игру из вашей библиотеки или файлы скачанные из Leg3ndy Hydra",
+    "danger_zone_section_description": "Вы можете удалить эту игру из вашей библиотеки или файлы скачанные из Hydra",
     "download_in_progress": "Идёт загрузка",
     "download_paused": "Загрузка приостановлена",
     "extracting": "Распаковка",
@@ -333,6 +345,15 @@
     "download_error_gofile_quota_exceeded": "Вы превысили месячную квоту Gofile. Пожалуйста, подождите, пока квота не будет восстановлена.",
     "download_error_real_debrid_account_not_authorized": "Ваш аккаунт Real-Debrid не авторизован для осуществления новых загрузок. Пожалуйста, проверьте настройки учетной записи и повторите попытку.",
     "download_error_not_cached_on_real_debrid": "Эта загрузка недоступна на Real-Debrid, и получение статуса загрузки с Real-Debrid пока недоступно.",
+    "download_error_premiumize_account_not_authorized": "Ваш аккаунт Premiumize не авторизован для новых загрузок. Пожалуйста, проверьте настройки аккаунта и попробуйте снова.",
+    "download_error_alldebrid_account_not_authorized": "Ваш аккаунт AllDebrid не авторизован для новых загрузок. Пожалуйста, проверьте настройки аккаунта и попробуйте снова.",
+    "download_error_not_cached_on_premiumize": "Эта загрузка недоступна на Premiumize.",
+    "download_error_premiumize_transfer_started": "Трансфер запущен в Premiumize, попробуйте снова через некоторое время.",
+    "download_error_not_cached_on_alldebrid": "Эта загрузка недоступна на AllDebrid.",
+    "download_error_premiumize_rate_limit_exceeded": "Превышен лимит запросов Premiumize. Пожалуйста, попробуйте позже.",
+    "download_error_alldebrid_rate_limit_exceeded": "Превышен лимит запросов AllDebrid. Пожалуйста, попробуйте позже.",
+    "download_error_premiumize_unavailable": "Premiumize временно недоступен. Пожалуйста, попробуйте позже.",
+    "download_error_alldebrid_unavailable": "AllDebrid временно недоступен. Пожалуйста, попробуйте позже.",
     "update_playtime_title": "Обновить время игры",
     "update_playtime_description": "Вручную обновите время игры для {{game}}",
     "update_playtime": "Обновить время игры",
@@ -395,10 +416,36 @@
     "hide_original": "Скрыть оригинал",
     "review_from_blocked_user": "Отзыв от заблокированного пользователя",
     "show": "Показать",
-    "hide": "Скрыть"
+    "hide": "Скрыть",
+    "edit_game_modal_fill_required": "Please fill in all required fields",
+    "edit_game_modal_failed": "Failed to update assets",
+    "run_with_mangohud": "Automatically run with MangoHud",
+    "auto_run_inherit_global": "Use global setting",
+    "auto_run_enabled": "Enabled",
+    "auto_run_disabled": "Disabled",
+    "winetricks_opened": "Winetricks opened",
+    "winetricks_open_error": "Failed to open Winetricks",
+    "proton_version_update_error": "Failed to update Proton version",
+    "proton_prefix_reset_error": "Failed to reset the game prefix for Proton switch",
+    "proton_switch_confirmation_title": "Switch Proton version?",
+    "proton_switch_confirmation_description": "To avoid prefix version conflicts, Leg3ndy Hydra will delete this game's auto-managed Wine prefix at {{path}} and recreate it on next launch. This may remove data stored inside that prefix.",
+    "proton_source_compatibility_tools": "Installed in Steam compatibilitytools.d",
+    "settings_category_general_description": "Executable path, launch options, and shortcuts",
+    "settings_category_assets_description": "Customize game title, icon, logo, and hero artwork",
+    "settings_category_hydra_cloud_description": "Configure cloud sync behavior for this game",
+    "settings_category_compatibility_description": "Linux compatibility settings including Wine and Proton",
+    "settings_category_downloads_description": "Manage download options and installation files",
+    "settings_category_danger_zone_description": "Irreversible actions for this game",
+    "launch_options_description_linux": "Add game launch arguments, or use <code>%command%</code> to wrap the launch command.",
+    "source_online": "Source is online",
+    "source_partial": "Some links are offline",
+    "source_offline": "Source is offline",
+    "create_steam_shortcut_modal_vr_flag": "VR Game (In Steam: update the VR flag or delete/recreate the shortcut)",
+    "create_steam_shortcut_modal_create_button": "Create",
+    "create_steam_shortcut_modal_cancel_button": "Cancel"
   },
   "activation": {
-    "title": "Активировать Leg3ndy Hydra",
+    "title": "Активировать Hydra",
     "installation_id": "ID установки:",
     "enter_activation_code": "Введите ваш активационный код",
     "message": "Если вы не знаете, где его запросить, у вас его не должно быть.",
@@ -431,7 +478,7 @@
     "downloads_completed": "Завершено",
     "queued": "В очереди",
     "no_downloads_title": "Здесь так пусто...",
-    "no_downloads_description": "Вы ещё ничего не скачали через Leg3ndy Hydra, но никогда не поздно начать.",
+    "no_downloads_description": "Вы ещё ничего не скачали через Hydra, но никогда не поздно начать.",
     "checking_files": "Проверка файлов…",
     "seeding": "Раздача",
     "stop_seeding": "Остановить раздачу",
@@ -446,7 +493,8 @@
     "network": "СЕТЬ",
     "peak": "ПИК",
     "move_up": "Переместить вверх",
-    "move_down": "Переместить вниз"
+    "move_down": "Переместить вниз",
+    "files": "FILES"
   },
   "settings": {
     "downloads_path": "Путь загрузок",
@@ -459,6 +507,14 @@
     "launch_with_system": "Запускать Leg3ndy Hydra вместе с системой",
     "general": "Основные",
     "behavior": "Поведение",
+    "app_basics": "Основные настройки приложения",
+    "startup_behavior": "Поведение при запуске",
+    "download_behavior": "Поведение загрузок",
+    "library_notifications": "Уведомления библиотеки",
+    "achievement_notifications": "Уведомления о достижениях",
+    "content_preferences": "Предпочтения контента",
+    "gameplay_metadata": "Игровые метаданные",
+    "debrid_services": "Сервисы Debrid",
     "download_sources": "Источники загрузки",
     "language": "Язык",
     "api_token": "API Ключ",
@@ -470,7 +526,7 @@
     "debrid_linked_message": "Привязан аккаунт \"{{username}}\"",
     "save_changes": "Сохранить изменения",
     "changes_saved": "Изменения успешно сохранены",
-    "download_sources_description": "Leg3ndy Hydra будет получать ссылки на загрузки из этих источников. URL должна содержать прямую ссылку на .json-файл с ссылками для загрузок.",
+    "download_sources_description": "Hydra будет получать ссылки на загрузки из этих источников. URL должна содержать прямую ссылку на .json-файл с ссылками для загрузок.",
     "validate_download_source": "Проверить",
     "remove_download_source": "Удалить",
     "add_download_source": "Добавить источник",
@@ -520,11 +576,12 @@
     "user_unblocked": "Пользователь разблокирован",
     "enable_achievement_notifications": "Когда достижение разблокировано",
     "launch_minimized": "Запускать Leg3ndy Hydra в свернутом виде",
+    "launch_hydra_in_library_page": "Запускать Leg3ndy Hydra на странице библиотеки",
     "disable_nsfw_alert": "Отключить предупреждение о непристойном контенте",
     "seed_after_download_complete": "Раздавать после завершения загрузки",
     "show_hidden_achievement_description": "Показывать описание скрытых достижений перед их получением",
     "account": "Аккаунт",
-    "hydra_cloud": "Leg3ndy Hydra Cloud",
+    "hydra_cloud": "Hydra Cloud",
     "no_users_blocked": "У вас нет заблокированных пользователей",
     "subscription_active_until": "Ваша подписка на Leg3ndy Hydra Cloud активна до {{date}}",
     "manage_subscription": "Управлять подпиской",
@@ -548,7 +605,7 @@
     "clear_themes": "Очистить",
     "create_theme": "Создать",
     "create_theme_modal_title": "Создать пользовательскую тему",
-    "create_theme_modal_description": "Создать новую тему для настройки внешнего вида Leg3ndy Hydra",
+    "create_theme_modal_description": "Создать новую тему для настройки внешнего вида Hydra",
     "theme_name": "Название",
     "insert_theme_name": "Вставить название темы",
     "set_theme": "Установить тему",
@@ -563,11 +620,25 @@
     "debrid": "Debrid",
     "debrid_description": "Сервисы Debrid - это премиум-загрузчики без ограничений, которые позволяют быстро скачивать файлы с различных файлообменников, ограничиваясь только скоростью вашего интернета.",
     "enable_torbox": "Включить TorBox",
+    "enable_premiumize": "Включить Premiumize",
+    "enable_alldebrid": "Включить AllDebrid",
     "torbox_description": "TorBox - это ваш премиум-сервис, конкурирующий даже с лучшими серверами на рынке.",
+    "premiumize_description": "Premiumize - это сервис неограниченных загрузок с поддержкой быстрых ссылок и облачных переносов.",
+    "alldebrid_description": "AllDebrid - это сервис неограниченных загрузок для премиум-ссылок и magnet-файлов.",
     "torbox_account_linked": "Аккаунт TorBox привязан",
+    "premiumize_account_linked": "Аккаунт Premiumize привязан",
+    "alldebrid_account_linked": "Аккаунт AllDebrid привязан",
     "create_real_debrid_account": "Нажмите здесь, если у вас еще нет аккаунта Real-Debrid",
     "create_torbox_account": "Нажмите здесь, если у вас еще нет учетной записи TorBox",
+    "create_premiumize_account": "Нажмите здесь, если у вас еще нет аккаунта Premiumize",
+    "create_alldebrid_account": "Нажмите здесь, если у вас еще нет аккаунта AllDebrid",
     "real_debrid_account_linked": "Аккаунт Real-Debrid привязан",
+    "debrid_provider_real_debrid": "Real-Debrid",
+    "debrid_provider_torbox": "TorBox",
+    "debrid_provider_premiumize": "Premiumize",
+    "debrid_provider_alldebrid": "AllDebrid",
+    "expand_debrid_section": "Развернуть раздел {{provider}}",
+    "collapse_debrid_section": "Свернуть раздел {{provider}}",
     "name_min_length": "Название темы должно содержать не менее 3 символов",
     "import_theme": "Импортировать тему",
     "import_theme_description": "Вы импортируете {{theme}} из магазина тем",
@@ -614,7 +685,13 @@
     "downloads": "Загрузки",
     "use_native_http_downloader": "Использовать встроенный HTTP-загрузчик (экспериментально)",
     "cannot_change_downloader_while_downloading": "Нельзя изменить эту настройку во время загрузки",
-    "create_start_menu_shortcut_on_download": "Создать ярлык в меню «Пуск» при завершении загрузки игры"
+    "create_shortcuts_on_download": "Создавать ярлыки на рабочем столе и в меню «Пуск» после завершения загрузки игры",
+    "default_proton_version": "Версия Proton по умолчанию",
+    "default_proton_version_description": "Выберите версию Proton, которую использует автоматический режим, если для игры не задана отдельная настройка",
+    "proton_version_auto": "Авто (глобальное значение по умолчанию или значение umu по умолчанию)",
+    "proton_source_umu_default": "выбор umu по умолчанию",
+    "proton_source_steam": "Установлено через Steam",
+    "proton_source_compatibility_tools": "Установлено в Steam compatibilitytools.d"
   },
   "notifications": {
     "download_complete": "Загрузка завершена",
@@ -639,7 +716,7 @@
     "scan_games_no_results_description": "Установленные игры не найдены"
   },
   "system_tray": {
-    "open": "Открыть Leg3ndy Hydra",
+    "open": "Открыть Hydra",
     "quit": "Выйти"
   },
   "game_card": {
@@ -794,7 +871,9 @@
     "favorites": "Избранное",
     "disk_usage": "Использование диска",
     "disk_usage_tooltip": "Установленный размер на диске",
-    "installer_size_tooltip": "Размер установщика"
+    "installer_size_tooltip": "Размер установщика",
+    "empty_favorites_title": "No favorite games",
+    "empty_favorites_description": "Mark games as favorites to keep them handy here."
   },
   "achievement": {
     "achievement_unlocked": "Достижение разблокировано",
@@ -809,8 +888,7 @@
     "achievement_earn_points": "Заработайте {{points}} очков с этим достижением",
     "earned_points": "Заработано очков:",
     "available_points": "Доступные очки:",
-    "how_to_earn_achievements_points": "Как заработать очки достижений?",
-    "locked_achievement": "Заблокированное достижение"
+    "how_to_earn_achievements_points": "Как заработать очки достижений?"
   },
   "hydra_cloud": {
     "subscription_tour_title": "Подписка Leg3ndy Hydra Cloud",
@@ -821,7 +899,7 @@
     "premium_support": "Премиальная поддержка",
     "show_and_compare_achievements": "Показывайте и сравнивайте свои достижения с достижениями других пользователей",
     "animated_profile_banner": "Анимированный баннер профиля",
-    "hydra_cloud": "Leg3ndy Hydra Cloud",
+    "hydra_cloud": "Hydra Cloud",
     "hydra_cloud_feature_found": "Вы только что открыли для себя функцию Leg3ndy Hydra Cloud!",
     "learn_more": "Подробнее",
     "debrid_description": "Скачивайте в 4 раза быстрее с Nimbus"
@@ -865,7 +943,7 @@
   "game_launcher": {
     "launching": "Запуск...",
     "launching_base": "Запуск",
-    "open_hydra": "Открыть Leg3ndy Hydra",
+    "open_hydra": "Открыть Hydra",
     "playtime": "Время игры",
     "amount_hours": "{{amount}} часов",
     "amount_minutes": "{{amount}} минут",
@@ -877,4 +955,3 @@
     "preflight_installing_detail": "{{detail}}"
   }
 }
-

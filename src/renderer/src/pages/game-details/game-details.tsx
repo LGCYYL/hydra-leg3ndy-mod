@@ -22,7 +22,6 @@ import {
 import { useDownload } from "@renderer/hooks";
 import { GameOptionsModal, RepacksModal } from "./modals";
 import { Downloader, getDownloadersForUri } from "@shared";
-import { CloudSyncModal } from "./cloud-sync-modal/cloud-sync-modal";
 import { CloudSyncFilesModal } from "./cloud-sync-files-modal/cloud-sync-files-modal";
 import "./game-details.scss";
 import "./hero.scss";
@@ -100,18 +99,22 @@ function GameDetails() {
           shop,
           showRepacksModal,
           showGameOptionsModal,
+          gameOptionsInitialCategory,
           hasNSFWContentBlocked,
           setHasNSFWContentBlocked,
           updateGame,
           setShowRepacksModal,
           setShowGameOptionsModal,
+          setGameOptionsInitialCategory,
         }) => {
           const handleStartDownload = async (
             repack: GameRepack,
             downloader: Downloader,
             downloadPath: string,
             automaticallyExtract: boolean,
-            addToQueueOnly = false
+            addToQueueOnly = false,
+            fileIndices?: number[],
+            selectedFilesSize?: number | null
           ) => {
             const response = addToQueueOnly
               ? await addGameToQueue({
@@ -123,6 +126,8 @@ function GameDetails() {
                 uri: selectRepackUri(repack, downloader),
                 automaticallyExtract: automaticallyExtract,
                 fileSize: repack.fileSize,
+                fileIndices,
+                selectedFilesSize,
               })
               : await startDownload({
                 objectId: objectId!,
@@ -133,12 +138,15 @@ function GameDetails() {
                 uri: selectRepackUri(repack, downloader),
                 automaticallyExtract: automaticallyExtract,
                 fileSize: repack.fileSize,
+                fileIndices,
+                selectedFilesSize,
               });
 
             if (response.ok) {
               await updateGame();
               setShowRepacksModal(false);
               setShowGameOptionsModal(false);
+              setGameOptionsInitialCategory("general");
             }
 
             return response;
@@ -152,18 +160,8 @@ function GameDetails() {
           return (
             <CloudSyncContextProvider objectId={objectId!} shop={shop}>
               <CloudSyncContextConsumer>
-                {({
-                  showCloudSyncModal,
-                  setShowCloudSyncModal,
-                  showCloudSyncFilesModal,
-                  setShowCloudSyncFilesModal,
-                }) => (
+                {({ showCloudSyncFilesModal, setShowCloudSyncFilesModal }) => (
                   <>
-                    <CloudSyncModal
-                      onClose={() => setShowCloudSyncModal(false)}
-                      visible={showCloudSyncModal}
-                    />
-
                     <CloudSyncFilesModal
                       onClose={() => setShowCloudSyncFilesModal(false)}
                       visible={showCloudSyncFilesModal}
@@ -200,7 +198,9 @@ function GameDetails() {
                     game={game}
                     onClose={() => {
                       setShowGameOptionsModal(false);
+                      setGameOptionsInitialCategory("general");
                     }}
+                    initialCategory={gameOptionsInitialCategory}
                     onNavigateHome={() => navigate("/")}
                   />
                 )}
@@ -215,7 +215,7 @@ function GameDetails() {
                     <div className="game-details__stars-icon-container">
                       <img
                         src={starsIconAnimated}
-                        alt="Stars animation"
+                        alt=""
                         className="game-details__stars-icon"
                       />
                     </div>

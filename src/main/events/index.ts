@@ -17,11 +17,14 @@ import "./themes";
 import "./torrenting";
 import "./user";
 import "./user-preferences";
+import { registerBackupEvents } from "./backup";
 
 import { GameShop } from "@types";
 import { GameFilesManager } from "@main/services/game-files-manager";
 
 import { isPortableVersion } from "@main/helpers";
+
+registerBackupEvents();
 
 ipcMain.handle("ping", () => "pong");
 ipcMain.handle("scanForExecutable", async (_, shop: GameShop, objectId: string) => {

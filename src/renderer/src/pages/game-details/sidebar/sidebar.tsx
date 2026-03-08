@@ -1,11 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { lazy, Suspense, useContext, useEffect, useState } from "react";
 import type {
   HowLongToBeatCategory,
+  ProtonDBData,
   SteamAppDetails,
   // UserAchievement,
 } from "@types";
 import { useTranslation } from "react-i18next";
-import { Button, Link, StarRating } from "@renderer/components";
+import { Button } from "@renderer/components/button/button";
+import { Link } from "@renderer/components/link/link";
+import { StarRating } from "@renderer/components/star-rating/star-rating";
 
 import { gameDetailsContext } from "@renderer/context";
 import { useDate, useFormat, /* useUserDetails */ } from "@renderer/hooks";
@@ -22,6 +25,46 @@ import { buildGameAchievementPath } from "@renderer/helpers";
 // import { useSubscription } from "@renderer/hooks/use-subscription";
 import "./sidebar.scss";
 import { GameLanguageSection } from "./game-language-section";
+
+const ProtonDBSection = lazy(async () => {
+  const mod = await import("./protondb-section");
+  return { default: mod.ProtonDBSection };
+});
+
+const protonDBResponseCache = new Map<string, ProtonDBData | null>();
+const protonDBInFlightRequests = new Map<
+  string,
+  Promise<ProtonDBData | null>
+>();
+
+const getProtonDBData = (shop: string, objectId: string) => {
+  const cacheKey = `${shop}:${objectId}`;
+
+  if (protonDBResponseCache.has(cacheKey)) {
+    return Promise.resolve(protonDBResponseCache.get(cacheKey) ?? null);
+  }
+
+  const inFlightRequest = protonDBInFlightRequests.get(cacheKey);
+  if (inFlightRequest) {
+    return inFlightRequest;
+  }
+
+  const request = window.electron.hydraApi
+    .get<ProtonDBData | null>(`/games/${shop}/${objectId}/protondb`, {
+      needsAuth: false,
+    })
+    .then((protonData) => {
+      protonDBResponseCache.set(cacheKey, protonData);
+      return protonData;
+    })
+    .catch(() => null)
+    .finally(() => {
+      protonDBInFlightRequests.delete(cacheKey);
+    });
+
+  protonDBInFlightRequests.set(cacheKey, request);
+  return request;
+};
 
 /* const achievementsPlaceholder: UserAchievement[] = [
   {
@@ -58,10 +101,15 @@ import { GameLanguageSection } from "./game-language-section";
 ]; */
 
 export function Sidebar() {
+  const shouldShowProtonFeatures = window.electron.platform === "linux";
   const [howLongToBeat, setHowLongToBeat] = useState<{
     isLoading: boolean;
     data: HowLongToBeatCategory[] | null;
   }>({ isLoading: true, data: null });
+  const [protonDB, setProtonDB] = useState<{
+    isLoading: boolean;
+    data: ProtonDBData | null;
+  }>({ isLoading: shouldShowProtonFeatures, data: null });
 
   // const { userDetails, hasActiveSubscription } = useUserDetails();
   const [activeRequirement, setActiveRequirement] =
@@ -96,8 +144,35 @@ export function Sidebar() {
     }
   }, [objectId, shop]);
 
+  useEffect(() => {
+    if (!shouldShowProtonFeatures || !objectId) {
+      setProtonDB({ isLoading: false, data: null });
+      return;
+    }
+
+    setProtonDB({ isLoading: true, data: null });
+
+    getProtonDBData(shop, objectId)
+      .then((protonData) => {
+        setProtonDB({ isLoading: false, data: protonData });
+      })
+      .catch(() => {
+        setProtonDB({ isLoading: false, data: null });
+      });
+  }, [shouldShowProtonFeatures, objectId, shop]);
+
   return (
     <aside className="content-sidebar">
+      {shouldShowProtonFeatures && (
+        <Suspense fallback={null}>
+          <ProtonDBSection
+            protonDBData={protonDB.data}
+            isLoading={protonDB.isLoading}
+            objectId={objectId ?? ""}
+          />
+        </Suspense>
+      )}
+
       {/* {userDetails === null && (
         <SidebarSection title={t("achievements")}>
           <div className="achievements-placeholder">
@@ -129,15 +204,16 @@ export function Sidebar() {
         </SidebarSection>
       )} */}
 
-      {achievements && achievements.length > 0 && (
-        <SidebarSection
-          title={t("achievements_count", {
-            unlockedCount: achievements.filter(a => a.unlocked).length,
-            achievementsCount: achievements.length,
-          })}
-        >
-          <ul className="list">
-            {/* {!hasActiveSubscription && (
+      {
+        achievements && achievements.length > 0 && (
+          <SidebarSection
+            title={t("achievements_count", {
+              unlockedCount: achievements.filter(a => a.unlocked).length,
+              achievementsCount: achievements.length,
+            })}
+          >
+            <ul className="list">
+              {/* {!hasActiveSubscription && (
               <button
                 className="subscription-required-button"
                 onClick={() => showHydraCloudModal("achievements")}
@@ -147,83 +223,86 @@ export function Sidebar() {
               </button>
             )} */}
 
-            {achievements.slice(0, 4).map((achievement) => (
-              <li key={achievement.displayName}>
-                <Link
-                  to={buildGameAchievementPath({
-                    shop: shop,
-                    objectId: objectId!,
-                    title: gameTitle,
-                  })}
-                  className="list__item"
-                  title={achievement.description}
-                >
-                  <img
-                    className={`list__item-image ${achievement.unlocked ? "" : "list__item-image--locked"
-                      }`}
-                    src={achievement.icon}
-                    alt={achievement.displayName}
-                  />
-                  <div>
-                    <p>{achievement.displayName}</p>
-                    <small>
-                      {achievement.unlockTime != null &&
-                        formatDateTime(achievement.unlockTime)}
-                    </small>
-                  </div>
-                </Link>
-              </li>
-            ))}
+              {achievements.slice(0, 4).map((achievement) => (
+                <li key={achievement.displayName}>
+                  <Link
+                    to={buildGameAchievementPath({
+                      shop: shop,
+                      objectId: objectId!,
+                      title: gameTitle,
+                    })}
+                    className="list__item"
+                    title={achievement.description}
+                  >
+                    <img
+                      className={`list__item-image ${achievement.unlocked ? "" : "list__item-image--locked"
+                        }`}
+                      src={achievement.icon}
+                      alt={achievement.displayName}
+                    />
+                    <div>
+                      <p>{achievement.displayName}</p>
+                      <small>
+                        {achievement.unlockTime != null &&
+                          formatDateTime(achievement.unlockTime)}
+                      </small>
+                    </div>
+                  </Link>
+                </li>
+              ))}
 
-            <Link
-              to={buildGameAchievementPath({
-                shop: shop,
-                objectId: objectId!,
-                title: gameTitle,
-              })}
-            >
-              {t("see_all_achievements")}
-            </Link>
-          </ul>
-        </SidebarSection>
-      )}
+              <Link
+                to={buildGameAchievementPath({
+                  shop: shop,
+                  objectId: objectId!,
+                  title: gameTitle,
+                })}
+              >
+                {t("see_all_achievements")}
+              </Link>
+            </ul>
+          </SidebarSection>
+        )
+      }
 
-      {stats && (
-        <SidebarSection title={t("stats")}>
-          <div className="stats__section">
-            <div className="stats__category">
-              <p className="stats__category-title">
-                <DownloadIcon size={18} />
-                {t("download_count")}
-              </p>
-              <p>{numberFormatter.format(stats?.downloadCount)}</p>
+      {
+        stats && (
+          <SidebarSection title={t("stats")}>
+            <div className="stats__section">
+              <div className="stats__category">
+                <p className="stats__category-title">
+                  <DownloadIcon size={18} />
+                  {t("download_count")}
+                </p>
+                <p>{numberFormatter.format(stats?.downloadCount)}</p>
+              </div>
+
+              <div className="stats__category">
+                <p className="stats__category-title">
+                  <PeopleIcon size={18} />
+                  {t("player_count")}
+                </p>
+                <p>{numberFormatter.format(stats?.playerCount)}</p>
+              </div>
+
+              <div className="stats__category">
+                <p className="stats__category-title">
+                  <StarIcon size={18} />
+                  {t("rating_count")}
+                </p>
+                <StarRating
+                  rating={
+                    stats?.averageScore === 0
+                      ? null
+                      : (stats?.averageScore ?? null)
+                  }
+                  size={16}
+                />
+              </div>
             </div>
-
-            <div className="stats__category">
-              <p className="stats__category-title">
-                <PeopleIcon size={18} />
-                {t("player_count")}
-              </p>
-              <p>{numberFormatter.format(stats?.playerCount)}</p>
-            </div>
-
-            <div className="stats__category">
-              <p className="stats__category-title">
-                <StarIcon size={18} />
-                {t("rating_count")}
-              </p>
-              <StarRating
-                rating={
-                  stats?.averageScore === 0
-                    ? null
-                    : (stats?.averageScore ?? null)
-                }
-                size={16}
-              />
-            </div>
-          </div>
-        </SidebarSection>
-      )}
+          </SidebarSection>
+        )
+      }
 
       <HowLongToBeatSection
         howLongToBeatData={howLongToBeat.data}
@@ -262,6 +341,6 @@ export function Sidebar() {
       </SidebarSection>
 
       <GameLanguageSection />
-    </aside>
+    </aside >
   );
 }
