@@ -31,6 +31,9 @@ export class WindowManager {
   public static mainWindow: Electron.BrowserWindow | null = null;
   public static notificationWindow: Electron.BrowserWindow | null = null;
   public static gameLauncherWindow: Electron.BrowserWindow | null = null;
+  public static systemTray: Tray | null = null;
+
+  private static isCreatingMainWindow = false;
 
   private static readonly editorWindows: Map<string, BrowserWindow> = new Map();
 
@@ -121,16 +124,27 @@ export class WindowManager {
   }
 
   public static async createMainWindow() {
-    if (this.mainWindow) return;
+    if (this.mainWindow || this.isCreatingMainWindow) return;
 
-    const { isMaximized = false, ...configWithoutMaximized } =
-      await this.loadScreenConfig();
+    this.isCreatingMainWindow = true;
+
+    let config;
+    try {
+      config = await this.loadScreenConfig();
+    } catch (e) {
+      this.isCreatingMainWindow = false;
+      throw e;
+    }
+
+    const { isMaximized = false, ...configWithoutMaximized } = config;
 
     this.updateInitialConfig(configWithoutMaximized);
 
     this.mainWindow = new BrowserWindow(
       this.initialConfigInitializationMainWindow
     );
+    
+    this.isCreatingMainWindow = false;
 
     if (isMaximized) {
       this.mainWindow.maximize();
@@ -617,6 +631,8 @@ export class WindowManager {
   }
 
   public static async createSystemTray(language: string) {
+    if (this.systemTray) return;
+
     let tray: Tray;
 
     if (process.platform === "darwin") {
@@ -627,6 +643,8 @@ export class WindowManager {
     } else {
       tray = new Tray(trayIcon);
     }
+
+    this.systemTray = tray;
 
     const updateSystemTray = async () => {
       const games = await gamesSublevel
