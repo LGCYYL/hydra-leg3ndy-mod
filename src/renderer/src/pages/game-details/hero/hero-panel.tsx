@@ -24,6 +24,7 @@ export function HeroPanel() {
     game?.download?.status === "active" && lastPacket?.gameId === game?.id;
 
   const isExtracting = extraction?.visibleId === game?.id;
+  const isScanning = game?.download?.scanning === true;
 
   const getInfo = () => {
     if (!game) {
@@ -53,7 +54,7 @@ export function HeroPanel() {
     (game?.download?.status === "active" && game?.download?.progress < 1) ||
     game?.download?.status === "paused";
 
-  const showExtractionProgressBar = isExtracting;
+  const showExtractionProgressBar = isExtracting || isScanning;
 
   return (
     <div className="hero-panel__container">
@@ -82,8 +83,9 @@ export function HeroPanel() {
         {showExtractionProgressBar && (
           <progress
             max={1}
-            value={extraction?.progress ?? 0}
-            className="hero-panel__progress-bar hero-panel__progress-bar--extraction"
+            value={isScanning ? 1 : (extraction?.progress ?? 0)}
+            className={`hero-panel__progress-bar hero-panel__progress-bar--extraction ${isScanning ? "hero-panel__progress-bar--scanning" : ""}`}
+            style={isScanning ? { accentColor: "#39FF14" } : undefined}
           />
         )}
       </div>

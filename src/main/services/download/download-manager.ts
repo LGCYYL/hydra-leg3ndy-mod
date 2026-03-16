@@ -543,7 +543,12 @@ export class DownloadManager {
       this.handleExtraction(download, game);
     } else {
       const gameFilesManager = new GameFilesManager(game.shop, game.objectId);
-      gameFilesManager.searchAndBindExecutable();
+      
+      // We still need to run Aegis even if it's not extracting (e.g direct games play)
+      // setExtractionComplete handles Aegis, installedSize logic and then calls searchAndBindExecutable
+      gameFilesManager.setExtractionComplete(false).catch((err) => {
+        logger.error("[DownloadManager] Failed to complete download processing:", err);
+      });
     }
 
     await this.processNextQueuedDownload();

@@ -344,7 +344,7 @@ function HeroDownloadView({
             <div className="download-group__progress-wrapper">
               <div className="download-group__progress-info-row">
                 {isGameScanning && (
-                  <span className="download-group__progress-status" style={{ color: "#32CD32", fontWeight: "bold" }}>
+                  <span className="download-group__progress-status" style={{ color: "#39FF14", fontWeight: "bold" }}>
                     Verificando com LEG3NDY Aegis...
                   </span>
                 )}
@@ -1072,7 +1072,7 @@ export function DownloadGroup({
                     </div>
                     <div className="download-group__simple-meta-row">
                       {game.download?.scanning ? (
-                        <span className="download-group__simple-extracting" style={{ color: "#32CD32", fontWeight: "bold" }}>
+                        <span className="download-group__simple-extracting" style={{ color: "#39FF14", fontWeight: "bold" }}>
                           Verificando com LEG3NDY Aegis...
                         </span>
                       ) : extraction?.visibleId === game.id ? (

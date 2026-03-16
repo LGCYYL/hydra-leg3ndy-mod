@@ -25,6 +25,7 @@ export function HeroPanelPlaytime() {
   const extraction = useAppSelector((state) => state.download.extraction);
 
   const isExtracting = extraction?.visibleId === game?.id;
+  const isScanning = game?.download?.scanning === true;
 
   useEffect(() => {
     if (game?.lastTimePlayed) {
@@ -63,10 +64,10 @@ export function HeroPanelPlaytime() {
   const extractionInProgressInfo = (
     <div className="hero-panel-playtime__download-details">
       <Link to="/downloads" className="hero-panel-playtime__downloads-link">
-        {t("extracting")}
+        {isScanning ? "Verificando com LEG3NDY Aegis..." : t("extracting")}
       </Link>
 
-      <small>{formatDownloadProgress(extraction?.progress ?? 0)}</small>
+      <small>{isScanning ? "" : formatDownloadProgress(extraction?.progress ?? 0)}</small>
     </div>
   );
 
@@ -90,8 +91,8 @@ export function HeroPanelPlaytime() {
     return (
       <>
         <p>{t("not_played_yet", { title: game?.title })}</p>
-        {isExtracting && extractionInProgressInfo}
-        {!isExtracting && hasDownload && downloadInProgressInfo}
+        {(isExtracting || isScanning) && extractionInProgressInfo}
+        {!(isExtracting || isScanning) && hasDownload && downloadInProgressInfo}
       </>
     );
   }
@@ -100,8 +101,8 @@ export function HeroPanelPlaytime() {
     return (
       <>
         <p>{t("playing_now")}</p>
-        {isExtracting && extractionInProgressInfo}
-        {!isExtracting && hasDownload && downloadInProgressInfo}
+        {(isExtracting || isScanning) && extractionInProgressInfo}
+        {!(isExtracting || isScanning) && hasDownload && downloadInProgressInfo}
       </>
     );
   }
@@ -133,9 +134,9 @@ export function HeroPanelPlaytime() {
         })}
       </p>
 
-      {isExtracting && extractionInProgressInfo}
-      {!isExtracting && hasDownload && downloadInProgressInfo}
-      {!isExtracting && !hasDownload && (
+      {(isExtracting || isScanning) && extractionInProgressInfo}
+      {!(isExtracting || isScanning) && hasDownload && downloadInProgressInfo}
+      {!(isExtracting || isScanning) && !hasDownload && (
         <p>
           {t("last_time_played", {
             period: lastTimePlayed,

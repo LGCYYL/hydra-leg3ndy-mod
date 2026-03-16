@@ -78,10 +78,12 @@ export default function Downloads() {
       /* Game has been manually added to the library */
       if (!next.download) return prev;
 
-      /* Is downloading or extracting */
+      /* Is downloading, extracting, or scanning */
       const isExtracting =
         next.download.extracting || extraction?.visibleId === next.id;
-      if (lastPacket?.gameId === next.id || isExtracting)
+      const isScanning = next.download.scanning;
+        
+      if (lastPacket?.gameId === next.id || isExtracting || isScanning)
         return { ...prev, downloading: [...prev.downloading, next] };
 
       /* Is either queued, paused, or failed */

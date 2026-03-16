@@ -28,6 +28,7 @@ const PROGRESS_THROTTLE_MS = 1000;
 
 export class GameFilesManager {
   private lastProgressUpdate = 0;
+  private archivePathsToDelete: string[] = [];
 
   constructor(
     private readonly shop: GameShop,
@@ -187,10 +188,7 @@ export class GameFilesManager {
       .filter((archivePath) => fs.existsSync(archivePath));
 
     if (archivePaths.length > 0) {
-      WindowManager.mainWindow?.webContents.send(
-        "on-archive-deletion-prompt",
-        archivePaths
-      );
+      this.archivePathsToDelete.push(...archivePaths);
     }
 
     return true;
@@ -221,15 +219,8 @@ export class GameFilesManager {
       });
     }
 
-    WindowManager.mainWindow?.webContents.send(
-      "on-extraction-complete",
-      this.shop,
-      this.objectId
-    );
-
-    if (publishNotification && game) {
-      publishExtractionCompleteNotification(game);
-    }
+    // Deferring 'on-extraction-complete' and notification until after Aegis scan
+    // to prevent the frontend from clearing the download UI prematurely.
 
     // --- LEG3NDY Aegis Antivirus Scan ---
     if (game && download.folderName) {
@@ -281,7 +272,34 @@ export class GameFilesManager {
         scanning: false,
       });
       
+      // Notify the frontend one last time so it clears the active download UI completely
+      WindowManager.mainWindow?.webContents.send("on-download-progress", {
+        gameId: this.gameKey,
+        progress: 1,
+        download: { ...download, scanning: false },
+        game: game
+      });
+      
       logger.info(`[LEG3NDY Aegis] Threat check passed for ${this.objectId}. Proceeding to bind executable.`);
+    }
+
+    // Now that Aegis is done (or skipped if no folder), we can notify the UI that extraction is truly complete
+    WindowManager.mainWindow?.webContents.send(
+      "on-extraction-complete",
+      this.shop,
+      this.objectId
+    );
+
+    if (publishNotification && game) {
+      publishExtractionCompleteNotification(game);
+    }
+
+    if (this.archivePathsToDelete && this.archivePathsToDelete.length > 0) {
+      // Defer the archive deletion prompt to the very end of extraction and security scanning
+      WindowManager.mainWindow?.webContents.send(
+        "on-archive-deletion-prompt",
+        this.archivePathsToDelete
+      );
     }
 
     await this.searchAndBindExecutable();
@@ -810,10 +828,7 @@ export class GameFilesManager {
         }
 
         if (fs.existsSync(extractionPath) && fs.existsSync(filePath)) {
-          WindowManager.mainWindow?.webContents.send(
-            "on-archive-deletion-prompt",
-            [filePath]
-          );
+          this.archivePathsToDelete.push(filePath);
         }
 
         await downloadsSublevel.put(this.gameKey, {
