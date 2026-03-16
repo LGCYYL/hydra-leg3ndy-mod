@@ -103,6 +103,7 @@ export interface Download {
   extractionProgress: number;
   fileIndices?: number[];
   selectedFilesSize?: number | null;
+  scanning?: boolean;
 }
 
 export interface GameAchievement {

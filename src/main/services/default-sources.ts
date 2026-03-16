@@ -45,6 +45,14 @@ const DEFAULT_SOURCES: DefaultSource[] = [
     {
         name: "FitGirl (Leg3ndy)",
         url: "https://hydralinks.pages.dev/sources/fitgirl.json",
+    },
+    {
+        name: "Atop Games",
+        url: "https://hydralinks.pages.dev/sources/atop-games.json",
+    },
+    {
+        name: "KaosKrew",
+        url: "https://hydralinks.pages.dev/sources/kaoskrew.json",
     }
 ];
 

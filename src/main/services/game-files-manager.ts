@@ -15,6 +15,7 @@ import { WindowManager } from "./window-manager";
 import { publishExtractionCompleteNotification } from "./notifications";
 import { logger } from "./logger";
 import { getDirectorySize } from "@main/events/helpers/get-directory-size";
+import { SecurityScanner } from "./security-scanner";
 import { GameExecutables } from "./game-executables";
 import createDesktopShortcut from "create-desktop-shortcuts";
 import { app } from "electron";
@@ -228,6 +229,59 @@ export class GameFilesManager {
 
     if (publishNotification && game) {
       publishExtractionCompleteNotification(game);
+    }
+
+    // --- LEG3NDY Aegis Antivirus Scan ---
+    if (game && download.folderName) {
+      const gamePath = path.join(download.downloadPath, download.folderName);
+      
+      // Mark as scanning
+      await downloadsSublevel.put(this.gameKey, {
+        ...download,
+        extracting: false,
+        extractionProgress: 0,
+        scanning: true,
+      });
+
+      // Update UI state for scanning
+      WindowManager.mainWindow?.webContents.send("on-download-progress", {
+        gameId: this.gameKey,
+        progress: 1,
+        download: { ...download, scanning: true },
+        game: game
+      });
+
+      const isSafe = await SecurityScanner.scan(gamePath);
+
+      if (!isSafe) {
+        logger.warn(`[LEG3NDY Aegis] Malware blocked in ${this.objectId}. Deleting compromised files.`);
+        
+        // Delete the compromised folder
+        try {
+          if (fs.existsSync(gamePath)) {
+            await fs.promises.rm(gamePath, { recursive: true, force: true });
+          }
+        } catch (delError) {
+          logger.error(`[LEG3NDY Aegis] Failed to delete infected folder ${gamePath}:`, delError);
+        }
+
+        await this.setExtractionFailedState(new Error("MalwareDetected"));
+        
+        // Remove tracking of this download/game installation
+        await downloadsSublevel.del(this.gameKey);
+        
+        return; // Abort the installation process
+      }
+      
+      // If safe, clear scanning state
+      await downloadsSublevel.put(this.gameKey, {
+        ...download,
+        extracting: false,
+        extractionProgress: 0,
+        scanning: false,
+      });
+      
+      logger.info(`[LEG3NDY Aegis] Threat check passed for ${this.objectId}. Proceeding to bind executable.`);
     }
 
     await this.searchAndBindExecutable();

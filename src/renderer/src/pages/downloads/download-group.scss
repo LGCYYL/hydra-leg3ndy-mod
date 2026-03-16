@@ -549,5 +549,23 @@
     &--extraction {
       background-color: #fff;
     }
+
+    &--scanning {
+      background-color: #32CD32; // Lime green for scanning
+      animation: pulse-scanning 1.5s infinite;
+    }
+  }
+
+  @keyframes pulse-scanning {
+    0% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 1;
+      box-shadow: 0 0 10px rgba(50, 205, 50, 0.8);
+    }
+    100% {
+      opacity: 0.6;
+    }
   }
 }

@@ -249,6 +249,7 @@ interface HeroDownloadViewProps {
   game: LibraryGame;
   isGameDownloading: boolean;
   isGameExtracting?: boolean;
+  isGameScanning?: boolean;
   downloadSpeed: number;
   finalDownloadSize: string;
   peakSpeed: number;
@@ -268,6 +269,7 @@ function HeroDownloadView({
   game,
   isGameDownloading,
   isGameExtracting = false,
+  isGameScanning = false,
   downloadSpeed,
   finalDownloadSize,
   peakSpeed,
@@ -341,12 +343,17 @@ function HeroDownloadView({
           <div className="download-group__progress-row download-group__progress-row--bar">
             <div className="download-group__progress-wrapper">
               <div className="download-group__progress-info-row">
-                {isGameExtracting && (
+                {isGameScanning && (
+                  <span className="download-group__progress-status" style={{ color: "#32CD32", fontWeight: "bold" }}>
+                    Verificando com LEG3NDY Aegis...
+                  </span>
+                )}
+                {isGameExtracting && !isGameScanning && (
                   <span className="download-group__progress-status">
                     {t("extracting")}
                   </span>
                 )}
-                {!isGameExtracting && lastPacket?.isCheckingFiles && (
+                {!isGameExtracting && !isGameScanning && lastPacket?.isCheckingFiles && (
                   <span className="download-group__progress-status">
                     {t("checking_files")}
                   </span>
@@ -378,14 +385,14 @@ function HeroDownloadView({
               </div>
               <div className="download-group__progress-bar">
                 <div
-                  className={`download-group__progress-fill ${isGameExtracting ? "download-group__progress-fill--extraction" : ""}`}
+                  className={`download-group__progress-fill ${isGameScanning ? "download-group__progress-fill--scanning" : isGameExtracting ? "download-group__progress-fill--extraction" : ""}`}
                   style={{
                     width: `${currentProgress * 100}%`,
                   }}
                 />
               </div>
             </div>
-            {!isGameExtracting && (
+            {!isGameExtracting && !isGameScanning && (
               <div className="download-group__hero-buttons">
                 {isGameDownloading ? (
                   <button
@@ -954,9 +961,10 @@ export function DownloadGroup({
 
   if (isDownloadingGroup && library.length > 0) {
     const game = library[0];
-    const isGameExtracting = extraction?.visibleId === game.id;
+    const isGameScanning = game.download?.scanning === true;
+    const isGameExtracting = extraction?.visibleId === game.id || isGameScanning;
     const isGameDownloading =
-      isGameDownloadingMap[game.id] && !isGameExtracting;
+      isGameDownloadingMap[game.id] && !isGameExtracting && !isGameScanning;
     const downloadSpeed = isGameDownloading
       ? (lastPacket?.downloadSpeed ?? 0)
       : 0;
@@ -971,7 +979,7 @@ export function DownloadGroup({
       storedPeak !== undefined && storedPeak > 0 ? storedPeak : downloadSpeed;
 
     let currentProgress = game.download?.progress || 0;
-    if (isGameExtracting) {
+    if (isGameExtracting && extraction) {
       currentProgress = extraction.progress;
     } else if (isGameDownloading && lastPacket) {
       currentProgress = lastPacket.progress;
@@ -994,6 +1002,7 @@ export function DownloadGroup({
           game={game}
           isGameDownloading={isGameDownloading}
           isGameExtracting={isGameExtracting}
+          isGameScanning={isGameScanning}
           downloadSpeed={downloadSpeed}
           finalDownloadSize={finalDownloadSize}
           peakSpeed={peakSpeed}
@@ -1062,7 +1071,11 @@ export function DownloadGroup({
                       </Badge>
                     </div>
                     <div className="download-group__simple-meta-row">
-                      {extraction?.visibleId === game.id ? (
+                      {game.download?.scanning ? (
+                        <span className="download-group__simple-extracting" style={{ color: "#32CD32", fontWeight: "bold" }}>
+                          Verificando com LEG3NDY Aegis...
+                        </span>
+                      ) : extraction?.visibleId === game.id ? (
                         <span className="download-group__simple-extracting">
                           {t("extracting")} (
                           {Math.round(extraction.progress * 100)}%)
