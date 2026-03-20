@@ -268,11 +268,6 @@ declare global {
       enabled: boolean;
       minimized: boolean;
     }) => Promise<void>;
-    exportBackup: () => Promise<boolean>;
-    importBackup: () => Promise<boolean>;
-    hostBackup: () => Promise<string | null>;
-    stopHostBackup: () => Promise<void>;
-    receiveBackup: (hostAddress: string) => Promise<boolean>;
     extractGameDownload: (shop: GameShop, objectId: string) => Promise<boolean>;
     scanInstalledGames: () => Promise<{
       foundGames: { title: string; executablePath: string }[];
@@ -297,8 +292,8 @@ declare global {
       objectId: string,
       options?: CreateSteamShortcutOptions
     ) => Promise<void>;
-    scanForExecutable: (shop: GameShop, objectId: string) => Promise<void>;
-    checkFileExists: (filePath: string) => Promise<boolean>;
+    deleteSteamShortcut: (shop: GameShop, objectId: string) => Promise<void>;
+    checkSteamShortcut: (shop: GameShop, objectId: string) => Promise<boolean>;
 
     /* Download sources */
     addDownloadSource: (url: string) => Promise<DownloadSource>;
@@ -339,34 +334,6 @@ declare global {
       objectId: string,
       backupPath: string | null
     ) => Promise<void>;
-
-    /* Local save */
-    searchCatalogue: <T>(data: any) => Promise<T>;
-    saveLocalBackup: (
-      objectId: string,
-      shop: GameShop,
-      label: string
-    ) => Promise<import("@types").LocalSaveArtifact>;
-    restoreLocalBackup: (
-      objectId: string,
-      shop: GameShop,
-      artifactId: string
-    ) => Promise<boolean>;
-    deleteLocalBackup: (
-      objectId: string,
-      shop: GameShop,
-      artifactId: string
-    ) => Promise<boolean>;
-    onLocalBackupComplete: (
-      objectId: string,
-      shop: GameShop,
-      cb: (success: boolean) => void
-    ) => () => Electron.IpcRenderer;
-    onLocalBackupRestoreComplete: (
-      objectId: string,
-      shop: GameShop,
-      cb: (success: boolean) => void
-    ) => () => Electron.IpcRenderer;
     onBackupDownloadComplete: (
       objectId: string,
       shop: GameShop,

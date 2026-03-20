@@ -31,7 +31,7 @@ const binaryNameByPlatform: Partial<Record<NodeJS.Platform, string>> = {
 
 const RPC_PORT_RANGE_START = 8080;
 const RPC_PORT_RANGE_END = 9000;
-const DEFAULT_RPC_PORT = 8084;
+const DEFAULT_RPC_PORT = 8087;
 
 export class PythonRPC {
   public static readonly BITTORRENT_PORT = "5881";

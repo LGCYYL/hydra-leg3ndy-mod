@@ -12,6 +12,7 @@ import { PowerSaveBlockerManager } from "./power-save-blocker";
 import path from "path";
 import { AchievementWatcherManager } from "./achievements/achievement-watcher-manager";
 import { MAIN_LOOP_INTERVAL } from "@main/constants";
+import { Wine } from "./wine";
 
 export const gamesPlaytime = new Map<
   string,
@@ -173,7 +174,10 @@ const hasLinuxCompatibilityProcessMatch = (
   const executableName = path.basename(executablePath).toLowerCase();
   const executableNameWithoutExtension = executableName.replace(/\.exe$/i, "");
   const executableDirectory = path.dirname(executablePath).toLowerCase();
-  const expectedWinePrefix = game.winePrefixPath?.toLowerCase();
+  const expectedWinePrefix = Wine.getEffectivePrefixPath(
+    game.winePrefixPath,
+    game.objectId
+  )?.toLowerCase();
 
   return linuxProcesses.some((process) => {
     if (process.cwd !== executableDirectory) {

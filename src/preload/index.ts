@@ -112,14 +112,6 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("updateUserPreferences", preferences),
   autoLaunch: (autoLaunchProps: { enabled: boolean; minimized: boolean }) =>
     ipcRenderer.invoke("autoLaunch", autoLaunchProps),
-
-  /* Backup */
-  exportBackup: () => ipcRenderer.invoke("exportBackup"),
-  importBackup: () => ipcRenderer.invoke("importBackup"),
-  hostBackup: () => ipcRenderer.invoke("hostBackup"),
-  stopHostBackup: () => ipcRenderer.invoke("stopHostBackup"),
-  receiveBackup: (hostAddress: string) => ipcRenderer.invoke("receiveBackup", hostAddress),
-
   authenticateRealDebrid: (apiToken: string) =>
     ipcRenderer.invoke("authenticateRealDebrid", apiToken),
   authenticatePremiumize: (apiToken: string) =>
@@ -322,10 +314,10 @@ contextBridge.exposeInMainWorld("electron", {
     objectId: string,
     options?: CreateSteamShortcutOptions
   ) => ipcRenderer.invoke("createSteamShortcut", shop, objectId, options),
-  scanForExecutable: (shop: GameShop, objectId: string) =>
-    ipcRenderer.invoke("scanForExecutable", shop, objectId),
-  checkFileExists: (filePath: string) =>
-    ipcRenderer.invoke("checkFileExists", filePath),
+  deleteSteamShortcut: (shop: GameShop, objectId: string) =>
+    ipcRenderer.invoke("deleteSteamShortcut", shop, objectId),
+  checkSteamShortcut: (shop: GameShop, objectId: string) =>
+    ipcRenderer.invoke("checkSteamShortcut", shop, objectId),
   onGamesRunning: (
     cb: (
       gamesRunning: Pick<GameRunning, "id" | "sessionDurationInMillis">[]
@@ -412,43 +404,6 @@ contextBridge.exposeInMainWorld("electron", {
     objectId: string,
     backupPath: string | null
   ) => ipcRenderer.invoke("selectGameBackupPath", shop, objectId, backupPath),
-
-  /* Local save */
-  searchCatalogue: <T>(data: any) =>
-    ipcRenderer.invoke("searchCatalogue", data).then((res) => res as T),
-  saveLocalBackup: (
-    objectId: string,
-    shop: GameShop,
-    label: string
-  ) => ipcRenderer.invoke("saveLocalBackup", objectId, shop, label),
-  restoreLocalBackup: (
-    objectId: string,
-    shop: GameShop,
-    artifactId: string
-  ) => ipcRenderer.invoke("restoreLocalBackup", objectId, shop, artifactId),
-  deleteLocalBackup: (
-    objectId: string,
-    shop: GameShop,
-    artifactId: string
-  ) => ipcRenderer.invoke("deleteLocalBackup", objectId, shop, artifactId),
-  onLocalBackupComplete: (objectId: string, shop: GameShop, cb: (success: boolean) => void) => {
-    const listener = (_event: Electron.IpcRendererEvent, success: boolean) => cb(success);
-    ipcRenderer.on(`on-local-backup-complete-${objectId}-${shop}`, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        `on-local-backup-complete-${objectId}-${shop}`,
-        listener
-      );
-  },
-  onLocalBackupRestoreComplete: (objectId: string, shop: GameShop, cb: (success: boolean) => void) => {
-    const listener = (_event: Electron.IpcRendererEvent, success: boolean) => cb(success);
-    ipcRenderer.on(`on-local-backup-restore-complete-${objectId}-${shop}`, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        `on-local-backup-restore-complete-${objectId}-${shop}`,
-        listener
-      );
-  },
   onUploadComplete: (objectId: string, shop: GameShop, cb: () => void) => {
     const listener = (_event: Electron.IpcRendererEvent) => cb();
     ipcRenderer.on(`on-upload-complete-${objectId}-${shop}`, listener);
