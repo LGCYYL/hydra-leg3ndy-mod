@@ -82,6 +82,8 @@ contextBridge.exposeInMainWorld("electron", {
     >,
 
   /* Catalogue */
+  searchCatalogue: <T = unknown>(data: unknown) =>
+    ipcRenderer.invoke("searchCatalogue", data) as Promise<T>,
   getGameShopDetails: (objectId: string, shop: GameShop, language: string) =>
     ipcRenderer.invoke("getGameShopDetails", objectId, shop, language),
   getRandomGame: () => ipcRenderer.invoke("getRandomGame"),

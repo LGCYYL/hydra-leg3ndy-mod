@@ -82,6 +82,7 @@ declare global {
     >;
 
     /* Catalogue */
+    searchCatalogue: <T = unknown>(data: unknown) => Promise<T>;
     getGameShopDetails: (
       objectId: string,
       shop: GameShop,
