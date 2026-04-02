@@ -5,7 +5,15 @@ import type {
 } from "@types";
 
 import { useAppDispatch, useAppSelector, useFormat } from "@renderer/hooks";
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import "./catalogue.scss";
 
@@ -92,7 +100,8 @@ export default function CatalogueWrapper() {
 }
 
 function Catalogue() {
-  const abortControllerRef = useRef<AbortController | null>(null);
+  const requestSequenceRef = useRef(0);
+  const hasResultsRef = useRef(false);
   const cataloguePageRef = useRef<HTMLDivElement>(null);
 
   const { steamDevelopers, steamPublishers, downloadSources } = useCatalogue();
@@ -100,8 +109,17 @@ function Catalogue() {
   const { steamGenres, steamUserTags, filters, page } = useAppSelector(
     (state) => state.catalogueSearch
   );
+  const deferredTitleFilter = useDeferredValue(filters.title);
+
+  const effectiveFilters = useMemo(() => {
+    return {
+      ...filters,
+      title: deferredTitleFilter,
+    };
+  }, [filters, deferredTitleFilter]);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
 
   const [results, setResults] = useState<CatalogueSearchResult[]>([]);
 
@@ -120,11 +138,9 @@ function Catalogue() {
         filters: CatalogueSearchPayload,
         downloadSources: DownloadSource[],
         pageSize: number,
-        offset: number
+        offset: number,
+        requestId: number
       ) => {
-        const abortController = new AbortController();
-        abortControllerRef.current = abortController;
-
         const requestData = {
           ...filters,
           take: pageSize,
@@ -134,21 +150,27 @@ function Catalogue() {
           ),
         };
 
-        const response = await window.electron.searchCatalogue<{
-          edges: CatalogueSearchResult[];
-          count: number;
-          isCachedResult?: boolean;
-        }>(requestData);
+        try {
+          const response = await window.electron.searchCatalogue<{
+            edges: CatalogueSearchResult[];
+            count: number;
+            isCachedResult?: boolean;
+          }>(requestData);
 
-        if (abortController.signal.aborted) return;
+          if (requestId !== requestSequenceRef.current) return;
 
-        if (response.isCachedResult) {
-          console.log("[Leg3ndy] Serving catalogue from local cache fallback");
+          if (response.isCachedResult) {
+            console.log("[Leg3ndy] Serving catalogue from local cache fallback");
+          }
+
+          setResults(response.edges);
+          setItemsCount(response.count);
+          setIsLoading(false);
+        } finally {
+          if (requestId === requestSequenceRef.current) {
+            setIsFetching(false);
+          }
         }
-
-        setResults(response.edges);
-        setItemsCount(response.count);
-        setIsLoading(false);
       },
       500
     )
@@ -158,21 +180,29 @@ function Catalogue() {
     s.replaceAll("&amp;", "&").replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 
   useEffect(() => {
-    setResults([]);
-    setIsLoading(true);
-    abortControllerRef.current?.abort();
+    hasResultsRef.current = results.length > 0;
+  }, [results.length]);
+
+  useEffect(() => {
+    const requestId = ++requestSequenceRef.current;
+    setIsFetching(true);
+
+    if (!hasResultsRef.current) {
+      setIsLoading(true);
+    }
 
     debouncedSearch(
-      filters,
+      effectiveFilters,
       downloadSources,
       PAGE_SIZE,
-      (page - 1) * PAGE_SIZE
+      (page - 1) * PAGE_SIZE,
+      requestId
     );
 
     return () => {
       debouncedSearch.cancel();
     };
-  }, [filters, downloadSources, page, debouncedSearch]);
+  }, [effectiveFilters, downloadSources, page, debouncedSearch]);
 
   const language = i18n.language.split("-")[0];
 
@@ -421,6 +451,10 @@ function Catalogue() {
             </SkeletonTheme>
           ) : (
             results.map((game) => <GameItem key={game.id} game={game} />)
+          )}
+
+          {isFetching && !isLoading && (
+            <span className="catalogue__result-count">{t("loading")}</span>
           )}
 
           <div className="catalogue__pagination-container">

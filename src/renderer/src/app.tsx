@@ -100,7 +100,12 @@ export function App() {
   useEffect(() => {
     const unsubscribe = window.electron.onDownloadProgress(
       (downloadProgress) => {
-        if (downloadProgress?.progress === 1 && !downloadProgress?.download?.scanning) {
+        if (
+          downloadProgress?.progress === 1 &&
+          !downloadProgress.isCheckingFiles &&
+          !downloadProgress.isDownloadingMetadata &&
+          !downloadProgress?.download?.scanning
+        ) {
           clearDownload();
           updateLibrary();
           return;

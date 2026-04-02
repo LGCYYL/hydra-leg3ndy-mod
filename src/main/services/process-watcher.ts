@@ -1,18 +1,17 @@
 import { WindowManager } from "./window-manager";
 import { createGame, trackGamePlaytime } from "./library-sync";
 import type { Game, GameRunning, UserPreferences } from "@types";
-import { PythonRPC } from "./python-rpc";
 import axios from "axios";
-import { ProcessPayload } from "./download/types";
 import { db, gamesSublevel, levelKeys } from "@main/level";
 import { CloudSync } from "./cloud-sync";
 import { saveLocalBackup } from "../events/local-save";
 import { logger } from "./logger";
 import { PowerSaveBlockerManager } from "./power-save-blocker";
-import path from "path";
+import path from "node:path";
 import { AchievementWatcherManager } from "./achievements/achievement-watcher-manager";
 import { MAIN_LOOP_INTERVAL } from "@main/constants";
 import { Wine } from "./wine";
+import { NativeAddon } from "./native-addon";
 
 export const gamesPlaytime = new Map<
   string,
@@ -124,9 +123,7 @@ const findGamePathByProcess = async (
 };
 
 const getSystemProcessMap = async () => {
-  const processes =
-    (await PythonRPC.rpc.get<ProcessPayload[] | null>("/process-list")).data ||
-    [];
+  const processes = NativeAddon.listProcesses();
 
   const processMap = new Map<string, Set<string>>();
   const winePrefixMap = new Map<string, string>();

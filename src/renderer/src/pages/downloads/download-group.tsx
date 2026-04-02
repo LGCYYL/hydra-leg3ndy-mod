@@ -688,7 +688,10 @@ export function DownloadGroup({
 
   const isGameSeeding = (game: LibraryGame) => {
     const entry = seedingStatus.find((s) => s.gameId === game.id);
-    if (entry?.status) return entry.status === "seeding";
+    if (entry) {
+      const rawStatus = (entry as { status?: unknown }).status;
+      return rawStatus === "seeding" || rawStatus === 5;
+    }
     return game.download?.status === "seeding";
   };
 
