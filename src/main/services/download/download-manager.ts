@@ -234,7 +234,16 @@ export class DownloadManager {
     download?: Download,
     downloadsToSeed?: Download[]
   ) {
-    await PythonRPC.spawn();
+    try {
+      await PythonRPC.spawn();
+    } catch (error) {
+      logger.error(
+        "[DownloadManager] Failed to start Python RPC (torrenting unavailable):",
+        error
+      );
+      // Don't crash the app — torrent downloads will fail gracefully when attempted
+      return;
+    }
 
     if (downloadsToSeed?.length) {
       for (const seedDownload of downloadsToSeed) {
