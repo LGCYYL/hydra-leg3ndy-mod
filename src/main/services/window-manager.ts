@@ -640,6 +640,11 @@ export class WindowManager {
         .createFromPath(trayIcon)
         .resize({ width: 24, height: 24 });
       tray = new Tray(macIcon);
+    } else if (process.platform === "win32") {
+      const winIcon = nativeImage
+        .createFromPath(trayIcon)
+        .resize({ width: 16, height: 16 });
+      tray = new Tray(winIcon);
     } else {
       tray = new Tray(trayIcon);
     }
@@ -716,7 +721,7 @@ export class WindowManager {
       tray.popUpContextMenu(contextMenu);
     };
 
-    tray.setToolTip("Hydra Leg3ndy Edition");
+    tray.setToolTip("LEG3NDY Hydra");
 
     if (process.platform === "win32") {
       await updateSystemTray();
