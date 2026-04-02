@@ -24,6 +24,7 @@ type HydraNativeModule = {
 
 export class NativeAddon {
   private static nativeModule: HydraNativeModule | null = null;
+  private static notFound = false;
 
   private static resolveAddonPath() {
     if (app.isPackaged) {
@@ -40,10 +41,20 @@ export class NativeAddon {
   private static load() {
     if (this.nativeModule) return this.nativeModule;
 
+    if (this.notFound) {
+      throw new Error("Hydra native addon unavailable (build Rust addon with: npm run build:native)");
+    }
+
     const addonPath = this.resolveAddonPath();
     const addonDir = path.dirname(addonPath);
 
     if (!fs.existsSync(addonPath)) {
+      this.notFound = true;
+      logger.warn(
+        `[NativeAddon] Hydra native addon not found at ${addonPath}. ` +
+        `Process tracking and profile images will be unavailable. ` +
+        `Run 'npm run build:native' after installing Rust to enable.`
+      );
       throw new Error(`Hydra native addon not found at ${addonPath}`);
     }
 

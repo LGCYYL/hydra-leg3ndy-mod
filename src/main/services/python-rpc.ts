@@ -101,6 +101,7 @@ export class PythonRPC {
   private static readyPromise: Promise<void> | null = null;
   private static readyResolver: (() => void) | null = null;
   private static readyRejecter: ((error: unknown) => void) | null = null;
+  private static permanentlyFailed = false;
 
   private static logStderr(readable: Readable | null) {
     if (!readable) return;
@@ -222,6 +223,10 @@ export class PythonRPC {
     params?: unknown,
     config?: RpcRequestConfig
   ): Promise<T> {
+    if (this.permanentlyFailed) {
+      throw new Error("Python RPC is permanently unavailable (Python not found in PATH)");
+    }
+
     if (!this.pythonProcess) {
       await this.spawn();
     }
@@ -293,6 +298,10 @@ export class PythonRPC {
     initialDownload?: GamePayload,
     initialSeeding?: GamePayload[]
   ) {
+    if (this.permanentlyFailed) {
+      throw new Error("Python RPC is permanently unavailable (Python not found in PATH)");
+    }
+
     if (this.pythonProcess) {
       await this.ensureReady().catch(() => {
         this.kill();
@@ -404,6 +413,7 @@ export class PythonRPC {
       }
     }
 
+    this.permanentlyFailed = true;
     throw new Error(
       "Python executable not found. Set HYDRA_PYTHON_BIN or install python3/python."
     );
