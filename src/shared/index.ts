@@ -151,6 +151,9 @@ export const getDownloadersForUri = (uri: string) => {
   if (uri.startsWith("https://www.rootz.so")) {
     return [Downloader.Rootz];
   }
+  if (uri.startsWith("https://qiwi.gg")) {
+    return [Downloader.Qiwi];
+  }
 
   if (realDebridHosts.some((host) => uri.startsWith(host)))
     return [Downloader.RealDebrid];
