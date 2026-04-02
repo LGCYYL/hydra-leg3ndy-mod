@@ -18,6 +18,7 @@ export const DOWNLOADER_NAME = {
   [Downloader.Premiumize]: "Premiumize",
   [Downloader.AllDebrid]: "AllDebrid",
   [Downloader.Qiwi]: "Qiwi.gg",
+  [Downloader.HttpDirect]: "Download Direto",
 };
 
 export const MAX_MINUTES_TO_SHOW_IN_PLAYTIME = 120;

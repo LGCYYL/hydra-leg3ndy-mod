@@ -1411,6 +1411,18 @@ export class DownloadManager {
           download.downloadPath
         );
       }
+      case Downloader.HttpDirect: {
+        // Link direto — passa puro para o JsHttpDownloader sem transformação
+        logger.log(
+          `[DownloadManager] HttpDirect download for URI: ${download.uri}`
+        );
+        return this.createDownloadPayload(
+          download.uri,
+          download.uri,
+          downloadId,
+          download.downloadPath
+        );
+      }
       default:
         return undefined;
     }

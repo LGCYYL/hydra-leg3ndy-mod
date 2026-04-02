@@ -169,6 +169,11 @@ export const getDownloadersForUri = (uri: string) => {
     ];
   }
 
+  // Qualquer link https/http direto não reconhecido → download direto
+  if (uri.startsWith("http://") || uri.startsWith("https://")) {
+    return [Downloader.HttpDirect];
+  }
+
   return [];
 };
 

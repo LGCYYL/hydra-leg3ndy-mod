@@ -252,6 +252,8 @@ export function DownloadSettingsModal({
   );
   const [selectedDownloader, setSelectedDownloader] =
     useState<Downloader | null>(null);
+  const [customUrl, setCustomUrl] = useState("");
+  const [customUrlExpanded, setCustomUrlExpanded] = useState(false);
   const [hasWritePermission, setHasWritePermission] = useState<boolean | null>(
     null
   );
@@ -920,6 +922,52 @@ export function DownloadSettingsModal({
     }
   };
 
+  const detectedCustomDownloader = useMemo(() => {
+    if (!customUrl.trim()) return null;
+    const detected = getDownloadersForUri(customUrl.trim());
+    return detected.length > 0 ? detected[0] : null;
+  }, [customUrl]);
+
+  const handleCustomUrlDownload = async () => {
+    if (!detectedCustomDownloader || !customUrl.trim()) return;
+
+    const syntheticRepack: GameRepack = {
+      id: `custom-${Date.now()}`,
+      title: customUrl.trim(),
+      fileSize: null,
+      uris: [customUrl.trim()],
+      unavailableUris: [],
+      uploadDate: null,
+      downloadSourceId: "custom",
+      downloadSourceName: "URL Personalizada",
+      createdAt: new Date().toISOString(),
+    };
+
+    setDownloadStarting(true);
+    try {
+      const response = await startDownload(
+        syntheticRepack,
+        detectedCustomDownloader,
+        selectedPath,
+        automaticExtractionEnabled,
+        hasActiveDownload
+      );
+
+      if (response.ok) {
+        setCustomUrl("");
+        onClose();
+      } else if (response.error) {
+        showErrorToast(t("download_error"), t(response.error), 4_000);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        showErrorToast(t("download_error"), error.message, 4_000);
+      }
+    } finally {
+      setDownloadStarting(false);
+    }
+  };
+
   const handlePrimaryButtonClick = async () => {
     await handleStartClick();
   };
@@ -1265,6 +1313,69 @@ export function DownloadSettingsModal({
                 );
               })}
             </div>
+          </div>
+
+          {/* ── URL Personalizada ── */}
+          <div className="download-settings-modal__custom-url-section">
+            <button
+              type="button"
+              className="download-settings-modal__custom-url-toggle"
+              onClick={() => setCustomUrlExpanded((v) => !v)}
+            >
+              <span>🔗 Inserir URL personalizada</span>
+              <ChevronDownIcon
+                size={14}
+                className={`download-settings-modal__custom-url-chevron${
+                  customUrlExpanded
+                    ? " download-settings-modal__custom-url-chevron--open"
+                    : ""
+                }`}
+              />
+            </button>
+
+            {customUrlExpanded && (
+              <div className="download-settings-modal__custom-url-body">
+                <input
+                  type="url"
+                  className="download-settings-modal__custom-url-input"
+                  placeholder="https://gofile.io/d/... ou qualquer link direto"
+                  value={customUrl}
+                  onChange={(e) => setCustomUrl(e.target.value)}
+                  disabled={downloadStarting}
+                />
+
+                <div className="download-settings-modal__custom-url-footer">
+                  {customUrl.trim() && (
+                    <span
+                      className={`download-settings-modal__custom-url-badge${
+                        detectedCustomDownloader !== null
+                          ? " download-settings-modal__custom-url-badge--detected"
+                          : " download-settings-modal__custom-url-badge--error"
+                      }`}
+                    >
+                      {detectedCustomDownloader !== null
+                        ? `✓ ${DOWNLOADER_NAME[detectedCustomDownloader]}`
+                        : "URL inválida"}
+                    </span>
+                  )}
+
+                  <Button
+                    onClick={handleCustomUrlDownload}
+                    disabled={
+                      !detectedCustomDownloader ||
+                      !customUrl.trim() ||
+                      downloadStarting
+                    }
+                  >
+                    {hasActiveDownload ? (
+                      <><PlusIcon /> Adicionar à fila</>
+                    ) : (
+                      <><DownloadIcon /> Baixar</>  
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
 
           {canOpenTorrentStep && (

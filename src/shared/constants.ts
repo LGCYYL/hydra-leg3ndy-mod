@@ -14,6 +14,7 @@ export enum Downloader {
   Premiumize,
   AllDebrid,
   Qiwi,
+  HttpDirect,
 }
 
 export enum DownloadSourceStatus {
