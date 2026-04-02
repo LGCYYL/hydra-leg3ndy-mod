@@ -9,6 +9,7 @@ import {
   PixelDrainApi,
   VikingFileApi,
   RootzApi,
+  QiwiApi,
 } from "../hosters";
 import { PythonRPC } from "../python-rpc";
 import {
@@ -1396,6 +1397,19 @@ export class DownloadManager {
           url: downloadUrl,
           save_path: download.downloadPath,
         };
+      }
+      case Downloader.Qiwi: {
+        logger.log(
+          `[DownloadManager] Processing Qiwi.gg download for URI: ${download.uri}`
+        );
+        const directUrl = await QiwiApi.getDirectLink(download.uri);
+        logger.log(`[Qiwi] Direct URL obtained`);
+        return this.createDownloadPayload(
+          directUrl,
+          download.uri,
+          downloadId,
+          download.downloadPath
+        );
       }
       default:
         return undefined;
