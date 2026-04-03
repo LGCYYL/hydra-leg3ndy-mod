@@ -368,6 +368,7 @@ export function DownloadSettingsModal({
     return allDownloaders
       .filter((downloader) => {
         if (downloader === Downloader.Hydra) return false; // Temporarily comment out Nimbus
+        if (downloader === Downloader.HttpDirect) return false; // Internal only — used by custom URL section
         if (
           downloader === Downloader.Premiumize &&
           !isFeatureEnabled(Feature.Premiumize)
